@@ -481,9 +481,7 @@ const LoginContent = () => {
                                         <button
                                             type="button"
                                             onClick={() =>
-                                                alert(
-                                                    "Terms of Service will be shown here"
-                                                )
+                                                router.push('/TermsofUse')
                                             }
                                             className="text-blue-600 hover:text-blue-700 font-medium"
                                         >
@@ -493,9 +491,7 @@ const LoginContent = () => {
                                         <button
                                             type="button"
                                             onClick={() =>
-                                                alert(
-                                                    "Privacy Policy will be shown here"
-                                                )
+                                                router.push('/PrivacyPolicy')
                                             }
                                             className="text-blue-600 hover:text-blue-700 font-medium"
                                         >
