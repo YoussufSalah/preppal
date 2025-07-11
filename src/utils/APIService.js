@@ -72,7 +72,6 @@ class APIService {
     }
 
     async makeRequest(endpoint, options = {}) {
-        // All endpoints are mounted under /api/ as per your server.js
         let url = this.baseURL;
 
         if (!endpoint.startsWith("/api/")) {
@@ -90,24 +89,29 @@ class APIService {
 
         // Handle FormData differently
         if (options.isFormData) {
-            // Remove Content-Type header for FormData to let browser set it with boundary
             delete config.headers["Content-Type"];
         } else {
-            // Set Content-Type for JSON requests
             config.headers["Content-Type"] = "application/json";
         }
 
         if (options.isFormData) {
-            config.body = options.body; // Pass raw FormData as body
+            config.body = options.body;
         } else if (options.body) {
-            config.body = JSON.stringify(options.body); // Otherwise, JSON
+            config.body = JSON.stringify(options.body);
         }
+
+        // 🔁 Add timeout logic
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => {
+            controller.abort();
+        }, 300000); // 5 minutes = 300,000ms
+        config.signal = controller.signal;
 
         try {
             console.log(`Making request to: ${url}`);
             const response = await fetch(url, config);
+            clearTimeout(timeoutId);
 
-            // Check if response is JSON
             const contentType = response.headers.get("content-type");
             if (!contentType || !contentType.includes("application/json")) {
                 console.error(
@@ -116,7 +120,6 @@ class APIService {
                     response.statusText
                 );
 
-                // If it's a 404, log the error but don't try alternatives since we know the API structure
                 if (response.status === 404) {
                     console.error(`Endpoint not found: ${url}`);
                 }
@@ -129,7 +132,6 @@ class APIService {
             const data = await response.json();
 
             if (!response.ok) {
-                // Handle specific error cases
                 if (response.status === 500) {
                     if (data.message === "Database connection not available") {
                         throw new Error(
@@ -147,6 +149,12 @@ class APIService {
 
             return data;
         } catch (error) {
+            clearTimeout(timeoutId);
+            if (error.name === "AbortError") {
+                throw new Error(
+                    "The request took too long and was cancelled. Try again."
+                );
+            }
             if (error.name === "TypeError" && error.message.includes("fetch")) {
                 throw new Error(
                     "Cannot connect to backend server. Please make sure the backend is running."
