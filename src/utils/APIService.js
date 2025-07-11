@@ -102,11 +102,10 @@ class APIService {
             config.body = JSON.stringify(options.body);
         }
 
-        // 🔁 Add timeout logic
         const controller = new AbortController();
         const timeoutId = setTimeout(() => {
             controller.abort();
-        }, 300000); // 5 minutes = 300,000ms
+        }, 1000 * 60 * 10);
         config.signal = controller.signal;
 
         try {
