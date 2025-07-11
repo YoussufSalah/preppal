@@ -541,47 +541,41 @@ const PDFUploadPage = () => {
                         )}
 
                         {/* Processing State - UPDATED with upload status */}
-                        {isProcessing && (
-                            <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-12 text-center shadow-xl animate-fade-in">
-                                <div className="w-24 h-24 mx-auto mb-8 relative">
-                                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full animate-spin">
-                                        <div className="w-full h-full bg-white rounded-full m-1"></div>
-                                    </div>
-                                    <div className="absolute inset-0 flex items-center justify-center">
-                                        {isUploading ? (
-                                            <Upload className="w-8 h-8 text-blue-600 animate-bounce" />
-                                        ) : (
-                                            <Brain className="w-8 h-8 text-blue-600 animate-pulse" />
-                                        )}
-                                    </div>
-                                </div>
-                                <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                                    {isUploading
-                                        ? "Uploading Your PDF"
-                                        : "Processing Your PDF"}
-                                </h2>
-                                <p className="text-lg text-gray-600 mb-8 animate-pulse">
-                                    {processingSteps[processingStep]}
-                                </p>
-                                <div className="w-full bg-gray-200 rounded-full h-3 mb-4">
-                                    <div
-                                        className="bg-gradient-to-r from-blue-500 to-purple-600 h-3 rounded-full transition-all duration-1000 animate-pulse"
-                                        style={{
-                                            width: `${
-                                                ((processingStep + 1) /
-                                                    processingSteps.length) *
-                                                100
-                                            }%`,
-                                        }}
-                                    ></div>
-                                </div>
-                                <p className="text-sm text-gray-500">
-                                    {processingStep + 1} of{" "}
-                                    {processingSteps.length} steps completed
-                                </p>
-                            </div>
-                        )}
-
+               {/* Processing State - UPDATED with upload status removed */}
+{isProcessing && (
+    <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-12 text-center shadow-xl animate-fade-in">
+        <div className="w-24 h-24 mx-auto mb-8 relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full animate-spin">
+                <div className="w-full h-full bg-white rounded-full m-1"></div>
+            </div>
+            <div className="absolute inset-0 flex items-center justify-center">
+                <Brain className="w-8 h-8 text-blue-600 animate-pulse" />
+            </div>
+        </div>
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            Processing Your PDF
+        </h2>
+        <p className="text-lg text-gray-600 mb-8 animate-pulse">
+            {processingSteps[processingStep]}
+        </p>
+        <div className="w-full bg-gray-200 rounded-full h-3 mb-4">
+            <div
+                className="bg-gradient-to-r from-blue-500 to-purple-600 h-3 rounded-full transition-all duration-1000 animate-pulse"
+                style={{
+                    width: `${
+                        ((processingStep + 1) /
+                            processingSteps.length) *
+                        100
+                    }%`,
+                }}
+            ></div>
+        </div>
+        <p className="text-sm text-gray-500">
+            {processingStep + 1} of{" "}
+            {processingSteps.length} steps completed
+        </p>
+    </div>
+)}
                         {/* Results */}
                         {results && (
                             <div className="space-y-8 animate-fade-in">
