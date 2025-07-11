@@ -148,7 +148,7 @@ const TermsOfUse = () => {
                     <li>• Illegal, offensive, or harmful materials</li>
                     <li>• Malicious software or viruses</li>
                     <li>• Hate speech or discriminatory content</li>
-                    <li>• Content that violates others' rights</li>
+                    <li>• Content that violates others&apos; rights</li>
                   </ul>
                 </div>
                 
@@ -315,7 +315,7 @@ const TermsOfUse = () => {
                 <h2 className="text-2xl font-bold">Questions About These Terms?</h2>
               </div>
               <p className="text-blue-100 mb-6 leading-relaxed">
-                If you have any questions about these Terms of Use, need clarification on any provisions, or want to report a violation, please don't hesitate to contact us.
+                If you have any questions about these Terms of Use, need clarification on any provisions, or want to report a violation, please don&apos;t hesitate to contact us.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <button className="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors">

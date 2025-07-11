@@ -197,7 +197,7 @@ const PrivacyPolicy = () => {
               
               <div className="bg-gradient-to-r from-yellow-50 to-orange-50 p-6 rounded-xl">
                 <p className="text-gray-700 mb-4">
-                  You have control over your personal information and how it's used. Your rights include:
+                  You have control over your personal information and how it&apos;s used. Your rights include:
                 </p>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
@@ -245,7 +245,7 @@ const PrivacyPolicy = () => {
                 <h2 className="text-2xl font-bold">Questions or Concerns?</h2>
               </div>
               <p className="text-blue-100 mb-6 leading-relaxed">
-                If you have any questions about this Privacy Policy, need assistance with your account, or want to exercise your privacy rights, we're here to help.
+                If you have any questions about this Privacy Policy, need assistance with your account, or want to exercise your privacy rights, we&apos;re here to help.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <button className="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors">
