@@ -185,16 +185,16 @@ const PDFUploadPage = () => {
             }
 
 if (selectedOptions.includes("flashcards")) {
-  const flashcardsData = await requestAI(uploadId, "flashcards");
+  const response = await requestAI(uploadId, "flashcards");
+  const flashcardsArray = response.flashcards || response.data?.flashcards || response.data;
 
-  if (!Array.isArray(flashcardsData)) {
-    console.error("🚨 flashcardsData is not an array:", flashcardsData);
-    throw new Error("Backend flashcards format is wrong.");
+  if (!Array.isArray(flashcardsArray)) {
+    throw new Error("Flashcards data is not an array");
   }
 
   const formattedFlashcards = {
-    count: flashcardsData.length,
-    cards: flashcardsData.map(card => ({
+    count: flashcardsArray.length,
+    cards: flashcardsArray.map(card => ({
       front: card.front,
       back: card.back,
     })),
