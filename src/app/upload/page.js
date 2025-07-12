@@ -175,14 +175,23 @@ const PDFUploadPage = () => {
 
             const generatedResults = {};
 
-            if (selectedOptions.includes("summary")) {
-                const summaryData = await requestAI(uploadId, "summary");
-                generatedResults.summary = {
-                    content:
-                        "Download your summary from: " +
-                        summaryData.summary_url,
-                };
-            }
+           if (selectedOptions.includes("summary")) {
+    const token = localStorage.getItem("token");
+    const response = await apiService.generatePDFSummary(uploadId, token);
+
+    if (response.status === "success") {
+       generatedResults.summary = {
+        content: response.data.summary,
+};
+
+    } else {
+        console.error("❌ Failed to generate summary:", response);
+        generatedResults.summary = {
+            content: "Failed to generate summary.",
+        };
+    }
+}
+
 
 if (selectedOptions.includes("flashcards")) {
   const response = await requestAI(uploadId, "flashcards");
@@ -612,30 +621,27 @@ if (selectedOptions.includes("flashcards")) {
 
                                 <div className="grid gap-6">
                                     {results.summary && (
-                                        <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 animate-fade-in">
-                                            <div className="flex items-center mb-4">
-                                                <FileText className="w-6 h-6 text-blue-600 mr-3" />
-                                                <h3 className="text-xl font-semibold text-gray-900">
-                                                    Smart Summary
-                                                </h3>
-                                            </div>
-                                            <div className="text-gray-700 mb-6 whitespace-pre-wrap">
-                                                {results.summary.content}
-                                            </div>
-                                            <button
-                                                onClick={() =>
-                                                    downloadContent(
-                                                        results.summary.content,
-                                                        "summary.txt"
-                                                    )
-                                                }
-                                                className="flex items-center text-blue-600 hover:text-blue-700 font-medium transition-colors hover:scale-105"
-                                            >
-                                                <Download className="w-4 h-4 mr-2" />
-                                                Download Summary
-                                            </button>
-                                        </div>
-                                    )}
+  <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 animate-fade-in">
+    <div className="flex items-center mb-4">
+      <FileText className="w-6 h-6 text-blue-600 mr-3" />
+      <h3 className="text-xl font-semibold text-gray-900">
+        Smart Summary
+      </h3>
+    </div>
+    <div className="text-gray-700 mb-6 whitespace-pre-wrap">
+      {results.summary.content}
+    </div>
+    <button
+      onClick={() =>
+        downloadContent(results.summary.content, "summary.txt")
+      }
+      className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-all"
+    >
+      Download Summary
+    </button>
+  </div>
+)}
+
 
                                     {/* Show flashcards when results are available */}
                                     {selectedOptions.includes("flashcards") && (
@@ -648,7 +654,7 @@ if (selectedOptions.includes("flashcards")) {
 
                                     {/* Quiz Section */}
 
-                                    {/* QuizResultsSection is not defined. You may want to implement it or remove this section. */}
+                                  
                                     <QuizResultsSection
                                         results={results}
                                         uploadedFile={uploadedFile}
