@@ -184,26 +184,20 @@ const PDFUploadPage = () => {
                 };
             }
 
-        const flashcardsData = await requestAI(uploadId, "flashcards");
+if (selectedOptions.includes("flashcards")) {
+  const flashcardsData = await requestAI(uploadId, "flashcards");
 
-let formattedFlashcards;
-if (Array.isArray(flashcardsData)) {
-  formattedFlashcards = {
+  const formattedFlashcards = {
     count: flashcardsData.length,
-    cards: flashcardsData,
+    cards: flashcardsData.map(card => ({
+      front: card.front,
+      back: card.back,
+    })),
   };
-} else if (flashcardsData?.cards && Array.isArray(flashcardsData.cards)) {
-  formattedFlashcards = {
-    count: flashcardsData.cards.length,
-    cards: flashcardsData.cards,
-  };
-} else {
-  formattedFlashcards = { count: 0, cards: [] };
+
+  generatedResults.flashcards = formattedFlashcards;
+  setFlashcardData(formattedFlashcards);  // ✅ this populates the UI
 }
-
-setFlashcardData(formattedFlashcards);
-generatedResults.flashcards = formattedFlashcards;
-
 
 
 
@@ -639,6 +633,7 @@ generatedResults.flashcards = formattedFlashcards;
 
                                     {/* Show flashcards when results are available */}
                                     {selectedOptions.includes("flashcards") && (
+                                        console.log("✅ flashcardData being passed:", flashcardData),
                                         <ModernFlashcards
                                             flashcardData={flashcardData}
                                             isLoading={isGeneratingFlashcards}
