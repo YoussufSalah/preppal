@@ -184,32 +184,25 @@ const PDFUploadPage = () => {
                 };
             }
 
-        if (selectedOptions.includes("flashcards")) {
-  const flashcardsData = await requestAI(uploadId, "flashcards");
+        const flashcardsData = await requestAI(uploadId, "flashcards");
 
-  console.log("flashcardsData from backend:", flashcardsData);
-
-  const formattedFlashcards = Array.isArray(flashcardsData)
-    ? {
-        count: flashcardsData.length,
-        cards: flashcardsData.map(card => ({
-          front: card.front,
-          back: card.back,
-        })),
-      }
-    : Array.isArray(flashcardsData.cards)
-    ? {
-        count: flashcardsData.cards.length,
-        cards: flashcardsData.cards.map(card => ({
-          front: card.front,
-          back: card.back,
-        })),
-      }
-    : { count: 0, cards: [] };
-
-  generatedResults.flashcards = formattedFlashcards;
-  setFlashcardData(formattedFlashcards);
+let formattedFlashcards;
+if (Array.isArray(flashcardsData)) {
+  formattedFlashcards = {
+    count: flashcardsData.length,
+    cards: flashcardsData,
+  };
+} else if (flashcardsData?.cards && Array.isArray(flashcardsData.cards)) {
+  formattedFlashcards = {
+    count: flashcardsData.cards.length,
+    cards: flashcardsData.cards,
+  };
+} else {
+  formattedFlashcards = { count: 0, cards: [] };
 }
+
+setFlashcardData(formattedFlashcards);
+generatedResults.flashcards = formattedFlashcards;
 
 
 
