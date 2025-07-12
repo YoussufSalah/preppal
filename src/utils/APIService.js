@@ -1,6 +1,8 @@
-const API_BASE_URL =
-    process.env.NEXT_PUBLIC_API_BASE_URL ||
-    "https://ai-study-companion-api-production.up.railway.app";
+if (!process.env.NEXT_PUBLIC_API_BASE_URL) {
+    throw new Error("Missing NEXT_PUBLIC_API_BASE_URL in env!");
+}
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 class APIService {
     constructor() {
@@ -100,11 +102,10 @@ class APIService {
             config.body = JSON.stringify(options.body);
         }
 
-        // 🔁 Add timeout logic
         const controller = new AbortController();
         const timeoutId = setTimeout(() => {
             controller.abort();
-        }, 300000); // 5 minutes = 300,000ms
+        }, 1000 * 60 * 10);
         config.signal = controller.signal;
 
         try {
