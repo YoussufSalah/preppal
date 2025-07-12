@@ -187,6 +187,11 @@ const PDFUploadPage = () => {
 if (selectedOptions.includes("flashcards")) {
   const flashcardsData = await requestAI(uploadId, "flashcards");
 
+  if (!Array.isArray(flashcardsData)) {
+    console.error("🚨 flashcardsData is not an array:", flashcardsData);
+    throw new Error("Backend flashcards format is wrong.");
+  }
+
   const formattedFlashcards = {
     count: flashcardsData.length,
     cards: flashcardsData.map(card => ({
@@ -196,8 +201,9 @@ if (selectedOptions.includes("flashcards")) {
   };
 
   generatedResults.flashcards = formattedFlashcards;
-  setFlashcardData(formattedFlashcards);  // ✅ this populates the UI
+  setFlashcardData(formattedFlashcards);
 }
+
 
 
 
