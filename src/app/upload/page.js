@@ -176,8 +176,7 @@ const PDFUploadPage = () => {
             const generatedResults = {};
 
            if (selectedOptions.includes("summary")) {
-    const token = localStorage.getItem("token");
-    const response = await apiService.generatePDFSummary(uploadId, token);
+            const response = await requestAI(uploadId, "summary");
 
     if (response.status === "success") {
        generatedResults.summary = {
