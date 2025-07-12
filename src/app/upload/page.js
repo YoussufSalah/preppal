@@ -184,9 +184,7 @@ const PDFUploadPage = () => {
                 };
             }
 
-          if (selectedOptions.includes("flashcards")) {
-  const flashcardsData = await requestAI(uploadId, "flashcards");
-
+        if (Array.isArray(flashcardsData)) {
   const formattedFlashcards = {
     count: flashcardsData.length,
     cards: flashcardsData.map(card => ({
@@ -194,10 +192,22 @@ const PDFUploadPage = () => {
       back: card.back,
     })),
   };
-
   generatedResults.flashcards = formattedFlashcards;
   setFlashcardData(formattedFlashcards);
+} else if (flashcardsData.cards && Array.isArray(flashcardsData.cards)) {
+  const formattedFlashcards = {
+    count: flashcardsData.cards.length,
+    cards: flashcardsData.cards.map(card => ({
+      front: card.front,
+      back: card.back,
+    })),
+  };
+  generatedResults.flashcards = formattedFlashcards;
+  setFlashcardData(formattedFlashcards);
+} else {
+  throw new Error("Unexpected flashcardsData format");
 }
+
 
 
 
