@@ -68,6 +68,7 @@ const PDFUploadPage = () => {
             time: "~4 minutes",
         },
     ];
+
     const processingSteps = [
         "Uploading PDF to secure storage...",
         "Analyzing PDF structure...",
@@ -113,6 +114,7 @@ const PDFUploadPage = () => {
                 : [...prev, optionId]
         );
     };
+    
 
     const uploadPdfToLevi = async (file) => {
         const token = getToken();
@@ -128,37 +130,37 @@ const PDFUploadPage = () => {
         }
     };
 
-    const requestAI = async (uploadId, type) => {
-        const token = getToken();
-        if (!token) {
-            throw new Error("No authentication token found");
-        }
+ const requestAI = async (uploadId, type) => {
+    const token = getToken();
+    if (!token) {
+        throw new Error("No authentication token found");
+    }
 
-        try {
-            let response;
-            if (type === "summary") {
-                response = await apiService.generatePDFSummary(uploadId, token);
-            } else if (type === "flashcards") {
-                response = await apiService.generatePDFFlashcards(
-                    uploadId,
-                    token
-                );
-            } else if (type === "quiz") {
-                // Note: Quiz endpoint is not in the API docs, so we'll skip it for now
-                throw new Error("Quiz generation is not yet available");
-            }
-
-            if (response.status === "success") {
+    try {
+        if (type === "summary") {
+            const response = await apiService.generatePDFSummary(uploadId, token);
+            if (response?.status === "success") {
                 return response.data;
             } else {
-                throw new Error(
-                    response.message || `Failed to generate ${type}`
-                );
+                throw new Error(response.message || "Failed to generate summary");
             }
-        } catch (error) {
-            throw new Error(error.message || `Failed to generate ${type}`);
         }
-    };
+
+        if (type === "flashcards") {
+            const flashcards = await apiService.generatePDFFlashcards(uploadId, token);
+            // ✅ No status/data wrapping — just return the array
+            return flashcards;
+        }
+
+        if (type === "quiz") {
+            throw new Error("Quiz generation is not yet available");
+        }
+
+        throw new Error("Invalid generation type");
+    } catch (error) {
+        throw new Error(error.message || `Failed to generate ${type}`);
+    }
+};
 
     const handleGenerate = async () => {
         if (!uploadedFile || selectedOptions.length === 0) return;

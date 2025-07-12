@@ -8,6 +8,9 @@ const ModernFlashcards = ({ flashcardData = null, isLoading = false }) => {
   const [dragStart, setDragStart] = useState(null);
   const [dragOffset, setDragOffset] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+ 
+
+
 
   // Default sample data if no flashcardData provided
   const defaultData = {
