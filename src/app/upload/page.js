@@ -175,20 +175,18 @@ const PDFUploadPage = () => {
 
             const generatedResults = {};
 
-           if (selectedOptions.includes("summary")) {
-            const response = await requestAI(uploadId, "summary");
+          if (selectedOptions.includes("summary")) {
+  const response = await requestAI(uploadId, "summary");
 
-    if (response.status === "success") {
-       generatedResults.summary = {
-        content: response.data.summary,
-};
-
-    } else {
-        console.error("❌ Failed to generate summary:", response);
-        generatedResults.summary = {
-            content: "Failed to generate summary.",
-        };
-    }
+  if (response && response.summary) {
+    generatedResults.summary = {
+      content: response.summary,
+    };
+  } else {
+    generatedResults.summary = {
+      content: "Summary generation failed or returned no data.",
+    };
+  }
 }
 
 
