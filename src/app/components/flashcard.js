@@ -8,9 +8,6 @@ const ModernFlashcards = ({ flashcardData = null, isLoading = false }) => {
   const [dragStart, setDragStart] = useState(null);
   const [dragOffset, setDragOffset] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
- 
-
-
 
   // Default sample data if no flashcardData provided
   const defaultData = {
@@ -48,7 +45,7 @@ const ModernFlashcards = ({ flashcardData = null, isLoading = false }) => {
   // Show loading state
   if (isLoading) {
     return (
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 lg:p-8 shadow-lg mx-2 sm:mx-0">
+      <div className="w-full min-w-0 bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 lg:p-8 shadow-lg">
         <div className="flex items-center justify-center h-64 sm:h-80">
           <div className="text-center space-y-4">
             <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center mx-auto animate-spin">
@@ -64,7 +61,7 @@ const ModernFlashcards = ({ flashcardData = null, isLoading = false }) => {
   // Show message if no flashcards available
   if (!currentFlashcardData.cards || currentFlashcardData.cards.length === 0) {
     return (
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 lg:p-8 shadow-lg mx-2 sm:mx-0">
+      <div className="w-full min-w-0 bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 lg:p-8 shadow-lg">
         <div className="flex items-center justify-center h-64 sm:h-80">
           <div className="text-center space-y-4">
             <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-300 rounded-full flex items-center justify-center mx-auto">
@@ -156,7 +153,7 @@ const ModernFlashcards = ({ flashcardData = null, isLoading = false }) => {
   };
 
   return (
-    <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-6 lg:p-8 shadow-lg hover:shadow-xl transition-all duration-300 animate-fade-in mx-2 sm:mx-0" style={{ animationDelay: '0.2s' }}>
+    <div className="w-full min-w-0 bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-6 lg:p-8 shadow-lg hover:shadow-xl transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.2s' }}>
       {/* Header - Mobile Optimized */}
       <div className="flex items-center justify-between mb-4 sm:mb-6 lg:mb-8">
         <div className="flex items-center">
@@ -169,7 +166,7 @@ const ModernFlashcards = ({ flashcardData = null, isLoading = false }) => {
       </div>
 
       {/* Card Stack Container - Mobile Optimized */}
-      <div className="relative h-72 sm:h-80 lg:h-96 mb-4 sm:mb-6 lg:mb-8 flex items-center justify-center overflow-hidden px-2 sm:px-0">
+      <div className="relative h-72 sm:h-80 lg:h-96 mb-4 sm:mb-6 lg:mb-8 flex items-center justify-center overflow-hidden">
         {/* Background Cards */}
         {currentFlashcardData.cards.map((_, index) => {
           if (Math.abs(index - currentCardIndex) > 2) return null;
@@ -180,7 +177,7 @@ const ModernFlashcards = ({ flashcardData = null, isLoading = false }) => {
           return (
             <div
               key={index}
-              className={`absolute w-full max-w-sm sm:max-w-md perspective-1000 transition-all duration-300 ${
+              className={`absolute w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl perspective-1000 transition-all duration-300 ${
                 isActive ? 'z-20' : 'z-10'
               }`}
               style={{
@@ -242,7 +239,7 @@ const ModernFlashcards = ({ flashcardData = null, isLoading = false }) => {
       </div>
 
       {/* Navigation Controls - Mobile Optimized */}
-      <div className="flex items-center justify-between mb-4 sm:mb-6 px-2 sm:px-0">
+      <div className="flex items-center justify-between mb-4 sm:mb-6">
         <button
           onClick={prevCard}
           disabled={currentCardIndex === 0}
@@ -280,7 +277,7 @@ const ModernFlashcards = ({ flashcardData = null, isLoading = false }) => {
       </div>
 
       {/* Progress Indicator - Mobile Optimized */}
-      <div className="flex justify-center mb-4 sm:mb-6 px-2">
+      <div className="flex justify-center mb-4 sm:mb-6">
         <div className="flex space-x-1 sm:space-x-2 overflow-x-auto max-w-full">
           {currentFlashcardData.cards.map((_, index) => (
             <div
