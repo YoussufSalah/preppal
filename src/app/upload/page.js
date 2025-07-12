@@ -184,11 +184,20 @@ const PDFUploadPage = () => {
                 };
             }
 
-            if (selectedOptions.includes("flashcards")) {
-                const flashcardsData = await requestAI(uploadId, "flashcards");
-                generatedResults.flashcards = flashcardsData;
-                setFlashcardData(flashcardsData);
-            }
+           if (selectedOptions.includes("flashcards")) {
+  const flashcardsData = await requestAI(uploadId, "flashcards");
+
+  generatedResults.flashcards = {
+    count: flashcardsData.length,
+    cards: flashcardsData,
+  };
+
+  setFlashcardData({
+    count: flashcardsData.length,
+    cards: flashcardsData,
+  });
+}
+
 
             if (selectedOptions.includes("quiz")) {
                 const quizData = await requestAI(uploadId, "quiz");
