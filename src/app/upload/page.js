@@ -184,18 +184,21 @@ const PDFUploadPage = () => {
                 };
             }
 
-           const flashcardsData = await requestAI(uploadId, "flashcards");
+          if (selectedOptions.includes("flashcards")) {
+  const flashcardsData = await requestAI(uploadId, "flashcards");
 
-const formattedFlashcards = {
-  count: flashcardsData.length,
-  cards: flashcardsData.map(card => ({
-    front: card.front,
-    back: card.back,
-  })),
-};
+  const formattedFlashcards = {
+    count: flashcardsData.length,
+    cards: flashcardsData.map(card => ({
+      front: card.front,
+      back: card.back,
+    })),
+  };
 
-generatedResults.flashcards = formattedFlashcards;
-setFlashcardData(formattedFlashcards);
+  generatedResults.flashcards = formattedFlashcards;
+  setFlashcardData(formattedFlashcards);
+}
+
 
 
             if (selectedOptions.includes("quiz")) {
