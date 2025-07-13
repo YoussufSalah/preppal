@@ -152,8 +152,13 @@ const PDFUploadPage = () => {
                 return flashcards;
             }
 
-            if (type === "quiz") {
-                throw new Error("Quiz generation is not yet available");
+            if (type === "quit"){
+                const response = await apiService.generatePDFQuiz(uploadId, token);
+                if (response?.status === "success"){
+                    return response.data.quiz;
+                } else {
+                    throw new Error (response.message || "Failed to generate quiz");
+                }
             }
 
             throw new Error("Invalid generation type");
@@ -217,7 +222,7 @@ const PDFUploadPage = () => {
                 const response = await requestAI(uploadId, "quiz");
 
                 if (response && response.questionsData && Array.isArray(response.questionsData)) {
-                    console.log("✅ Quiz data received:", quizData);
+                    console.log("✅ Quiz data received:", response);
                     generatedResults.quiz = response;
                 } else {
                     generatedResults.quiz = {
