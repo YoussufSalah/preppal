@@ -68,6 +68,7 @@ const PDFUploadPage = () => {
             time: "~4 minutes",
         },
     ];
+
     const processingSteps = [
         "Uploading PDF to secure storage...",
         "Analyzing PDF structure...",
@@ -113,6 +114,7 @@ const PDFUploadPage = () => {
                 : [...prev, optionId]
         );
     };
+    
 
     const uploadPdfToLevi = async (file) => {
         const token = getToken();
@@ -128,37 +130,37 @@ const PDFUploadPage = () => {
         }
     };
 
-    const requestAI = async (uploadId, type) => {
-        const token = getToken();
-        if (!token) {
-            throw new Error("No authentication token found");
-        }
+ const requestAI = async (uploadId, type) => {
+    const token = getToken();
+    if (!token) {
+        throw new Error("No authentication token found");
+    }
 
-        try {
-            let response;
-            if (type === "summary") {
-                response = await apiService.generatePDFSummary(uploadId, token);
-            } else if (type === "flashcards") {
-                response = await apiService.generatePDFFlashcards(
-                    uploadId,
-                    token
-                );
-            } else if (type === "quiz") {
-                // Note: Quiz endpoint is not in the API docs, so we'll skip it for now
-                throw new Error("Quiz generation is not yet available");
-            }
-
-            if (response.status === "success") {
+    try {
+        if (type === "summary") {
+            const response = await apiService.generatePDFSummary(uploadId, token);
+            if (response?.status === "success") {
                 return response.data;
             } else {
-                throw new Error(
-                    response.message || `Failed to generate ${type}`
-                );
+                throw new Error(response.message || "Failed to generate summary");
             }
-        } catch (error) {
-            throw new Error(error.message || `Failed to generate ${type}`);
         }
-    };
+
+        if (type === "flashcards") {
+            const flashcards = await apiService.generatePDFFlashcards(uploadId, token);
+            // ✅ No status/data wrapping — just return the array
+            return flashcards;
+        }
+
+        if (type === "quiz") {
+            throw new Error("Quiz generation is not yet available");
+        }
+
+        throw new Error("Invalid generation type");
+    } catch (error) {
+        throw new Error(error.message || `Failed to generate ${type}`);
+    }
+};
 
     const handleGenerate = async () => {
         if (!uploadedFile || selectedOptions.length === 0) return;
@@ -173,20 +175,43 @@ const PDFUploadPage = () => {
 
             const generatedResults = {};
 
-            if (selectedOptions.includes("summary")) {
-                const summaryData = await requestAI(uploadId, "summary");
-                generatedResults.summary = {
-                    content:
-                        "Download your summary from: " +
-                        summaryData.summary_url,
-                };
-            }
+          if (selectedOptions.includes("summary")) {
+  const response = await requestAI(uploadId, "summary");
 
-            if (selectedOptions.includes("flashcards")) {
-                const flashcardsData = await requestAI(uploadId, "flashcards");
-                generatedResults.flashcards = flashcardsData;
-                setFlashcardData(flashcardsData);
-            }
+  if (response && response.summary) {
+    generatedResults.summary = {
+      content: response.summary,
+    };
+  } else {
+    generatedResults.summary = {
+      content: "Summary generation failed or returned no data.",
+    };
+  }
+}
+
+
+if (selectedOptions.includes("flashcards")) {
+  const response = await requestAI(uploadId, "flashcards");
+  const flashcardsArray = response.flashcards || response.data?.flashcards || response.data;
+
+  if (!Array.isArray(flashcardsArray)) {
+    throw new Error("Flashcards data is not an array");
+  }
+
+  const formattedFlashcards = {
+    count: flashcardsArray.length,
+    cards: flashcardsArray.map(card => ({
+      front: card.front,
+      back: card.back,
+    })),
+  };
+
+  generatedResults.flashcards = formattedFlashcards;
+  setFlashcardData(formattedFlashcards);
+}
+
+
+
 
             if (selectedOptions.includes("quiz")) {
                 const quizData = await requestAI(uploadId, "quiz");
@@ -593,33 +618,31 @@ const PDFUploadPage = () => {
 
                                 <div className="grid gap-6">
                                     {results.summary && (
-                                        <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 animate-fade-in">
-                                            <div className="flex items-center mb-4">
-                                                <FileText className="w-6 h-6 text-blue-600 mr-3" />
-                                                <h3 className="text-xl font-semibold text-gray-900">
-                                                    Smart Summary
-                                                </h3>
-                                            </div>
-                                            <div className="text-gray-700 mb-6 whitespace-pre-wrap">
-                                                {results.summary.content}
-                                            </div>
-                                            <button
-                                                onClick={() =>
-                                                    downloadContent(
-                                                        results.summary.content,
-                                                        "summary.txt"
-                                                    )
-                                                }
-                                                className="flex items-center text-blue-600 hover:text-blue-700 font-medium transition-colors hover:scale-105"
-                                            >
-                                                <Download className="w-4 h-4 mr-2" />
-                                                Download Summary
-                                            </button>
-                                        </div>
-                                    )}
+  <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 animate-fade-in">
+    <div className="flex items-center mb-4">
+      <FileText className="w-6 h-6 text-blue-600 mr-3" />
+      <h3 className="text-xl font-semibold text-gray-900">
+        Smart Summary
+      </h3>
+    </div>
+    <div className="text-gray-700 mb-6 whitespace-pre-wrap">
+      {results.summary.content}
+    </div>
+    <button
+      onClick={() =>
+        downloadContent(results.summary.content, "summary.txt")
+      }
+      className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-all"
+    >
+      Download Summary
+    </button>
+  </div>
+)}
+
 
                                     {/* Show flashcards when results are available */}
                                     {selectedOptions.includes("flashcards") && (
+                                        console.log("✅ flashcardData being passed:", flashcardData),
                                         <ModernFlashcards
                                             flashcardData={flashcardData}
                                             isLoading={isGeneratingFlashcards}
@@ -628,7 +651,7 @@ const PDFUploadPage = () => {
 
                                     {/* Quiz Section */}
 
-                                    {/* QuizResultsSection is not defined. You may want to implement it or remove this section. */}
+                                  
                                     <QuizResultsSection
                                         results={results}
                                         uploadedFile={uploadedFile}
