@@ -16,9 +16,10 @@ import {
 import { useRouter } from "next/navigation";
 import ProtectedRoute from "../components/ProtectedRoute";
 import { apiService } from "../../utils/APIService.js";
-import { getToken, getUserTokens, useTokens } from "../../utils/auth.js";
+import { getToken, getUserTokens, signOut, useTokens } from "../../utils/auth.js";
 import ModernFlashcards from "../components/flashcard";
 import QuizResultsSection from "../components/quiz";
+import BetaNotice from "../components/betaNotice";
 
 const PDFUploadPage = () => {
     const [uploadedFile, setUploadedFile] = useState(null);
@@ -235,7 +236,30 @@ const PDFUploadPage = () => {
             setResults(generatedResults);
             setProcessingStep(5);
         } catch (err) {
-            setError(err.message);
+  setError(err.message);
+  const errorMessage = err.message || "";
+
+  if (
+    errorMessage.includes("row-level security") ||
+    errorMessage.includes("violates row-level security") ||
+    errorMessage.includes("new row violates row-level security policy")
+  ) {
+    // 🔐 logout user 
+    try {
+    await signOut();
+    router.push("/login?error=reauth"); // ✅ triggers toast on login
+  } catch (logoutError) {
+    console.error("Signout failed:", logoutError);
+    localStorage.removeItem("accessToken");
+    router.push("/login?error=reauth"); // fallback redirect
+  }
+    return; // make sure we don't fall through and call setError() again
+  }
+
+  // all other errors
+  setError(errorMessage);
+
+
         } finally {
             setIsProcessing(false);
             setIsUploading(false);
@@ -361,7 +385,7 @@ const PDFUploadPage = () => {
                                 flashcards, and quizzes
                             </p>
                         </div>
-
+                        <BetaNotice />
                         {/* Error Message */}
                         {error && (
                             <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4 flex items-center animate-fade-in">

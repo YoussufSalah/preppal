@@ -10,6 +10,7 @@ import {
     isAuthenticated,
 } from "../../utils/auth.js";
 import { apiService } from "../../utils/APIService.js";
+import { toast } from "sonner";
 
 const LoginContent = () => {
     const router = useRouter();
@@ -70,6 +71,19 @@ const LoginContent = () => {
         });
     }, [isLogin]);
 
+    
+  
+useEffect(() => {
+  if (error === "reauth") {
+    toast("Something happened!", {
+      description: "You were logged out due to a security issue. Please login again",
+      action: {
+        label: "Dismiss",
+        onClick: () => console.log("User dismissed toast"),
+      },
+    });
+  }
+}, [error]);
     if (!isMounted || loading) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 flex items-center justify-center">
