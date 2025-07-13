@@ -290,6 +290,26 @@ class APIService {
         });
     }
 
+        // Quiz Methods
+async generatePDFQuiz(uploadId, token) {
+    return this.makeRequest(`/quiz/pdf/${uploadId}`, {
+        method: "GET",
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+}
+
+async getAllQuizzes(token) {
+    return this.makeRequest("/quiz/", {
+        method: "GET",
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+}
+
+
     // Utility Methods
     getToken() {
         if (typeof window !== "undefined") {

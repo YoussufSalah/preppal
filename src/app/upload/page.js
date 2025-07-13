@@ -114,7 +114,7 @@ const PDFUploadPage = () => {
                 : [...prev, optionId]
         );
     };
-    
+
 
     const uploadPdfToLevi = async (file) => {
         const token = getToken();
@@ -130,37 +130,37 @@ const PDFUploadPage = () => {
         }
     };
 
- const requestAI = async (uploadId, type) => {
-    const token = getToken();
-    if (!token) {
-        throw new Error("No authentication token found");
-    }
+    const requestAI = async (uploadId, type) => {
+        const token = getToken();
+        if (!token) {
+            throw new Error("No authentication token found");
+        }
 
-    try {
-        if (type === "summary") {
-            const response = await apiService.generatePDFSummary(uploadId, token);
-            if (response?.status === "success") {
-                return response.data;
-            } else {
-                throw new Error(response.message || "Failed to generate summary");
+        try {
+            if (type === "summary") {
+                const response = await apiService.generatePDFSummary(uploadId, token);
+                if (response?.status === "success") {
+                    return response.data;
+                } else {
+                    throw new Error(response.message || "Failed to generate summary");
+                }
             }
-        }
 
-        if (type === "flashcards") {
-            const flashcards = await apiService.generatePDFFlashcards(uploadId, token);
-            // ✅ No status/data wrapping — just return the array
-            return flashcards;
-        }
+            if (type === "flashcards") {
+                const flashcards = await apiService.generatePDFFlashcards(uploadId, token);
+                // ✅ No status/data wrapping — just return the array
+                return flashcards;
+            }
 
-        if (type === "quiz") {
-            throw new Error("Quiz generation is not yet available");
-        }
+            if (type === "quiz") {
+                throw new Error("Quiz generation is not yet available");
+            }
 
-        throw new Error("Invalid generation type");
-    } catch (error) {
-        throw new Error(error.message || `Failed to generate ${type}`);
-    }
-};
+            throw new Error("Invalid generation type");
+        } catch (error) {
+            throw new Error(error.message || `Failed to generate ${type}`);
+        }
+    };
 
     const handleGenerate = async () => {
         if (!uploadedFile || selectedOptions.length === 0) return;
@@ -175,48 +175,57 @@ const PDFUploadPage = () => {
 
             const generatedResults = {};
 
-          if (selectedOptions.includes("summary")) {
-  const response = await requestAI(uploadId, "summary");
+            if (selectedOptions.includes("summary")) {
+                const response = await requestAI(uploadId, "summary");
 
-  if (response && response.summary) {
-    generatedResults.summary = {
-      content: response.summary,
-    };
-  } else {
-    generatedResults.summary = {
-      content: "Summary generation failed or returned no data.",
-    };
-  }
-}
+                if (response && response.summary) {
+                    generatedResults.summary = {
+                        content: response.summary,
+                    };
+                } else {
+                    generatedResults.summary = {
+                        content: "Summary generation failed or returned no data.",
+                    };
+                }
+            }
 
 
-if (selectedOptions.includes("flashcards")) {
-  const response = await requestAI(uploadId, "flashcards");
-  const flashcardsArray = response.flashcards || response.data?.flashcards || response.data;
+            if (selectedOptions.includes("flashcards")) {
+                const response = await requestAI(uploadId, "flashcards");
+                const flashcardsArray = response.flashcards || response.data?.flashcards || response.data;
 
-  if (!Array.isArray(flashcardsArray)) {
-    throw new Error("Flashcards data is not an array");
-  }
+                if (!Array.isArray(flashcardsArray)) {
+                    throw new Error("Flashcards data is not an array");
+                }
 
-  const formattedFlashcards = {
-    count: flashcardsArray.length,
-    cards: flashcardsArray.map(card => ({
-      front: card.front,
-      back: card.back,
-    })),
-  };
+                const formattedFlashcards = {
+                    count: flashcardsArray.length,
+                    cards: flashcardsArray.map(card => ({
+                        front: card.front,
+                        back: card.back,
+                    })),
+                };
 
-  generatedResults.flashcards = formattedFlashcards;
-  setFlashcardData(formattedFlashcards);
-}
+                generatedResults.flashcards = formattedFlashcards;
+                setFlashcardData(formattedFlashcards);
+            }
 
 
 
 
             if (selectedOptions.includes("quiz")) {
-                const quizData = await requestAI(uploadId, "quiz");
-                generatedResults.quiz = quizData;
+                const response = await requestAI(uploadId, "quiz");
+
+                if (response && response.questionsData && Array.isArray(response.questionsData)) {
+                    console.log("✅ Quiz data received:", quizData);
+                    generatedResults.quiz = response;
+                } else {
+                    generatedResults.quiz = {
+                        error: "Quiz generation failed or returned invalid format.",
+                    };
+                }
             }
+
 
             setResults(generatedResults);
             setProcessingStep(5);
@@ -370,13 +379,12 @@ if (selectedOptions.includes("flashcards")) {
                                     style={{ animationDelay: "0.4s" }}
                                 >
                                     <div
-                                        className={`relative border-2 border-dashed rounded-3xl p-12 text-center transition-all duration-300 backdrop-blur-sm ${
-                                            isDragOver
+                                        className={`relative border-2 border-dashed rounded-3xl p-12 text-center transition-all duration-300 backdrop-blur-sm ${isDragOver
                                                 ? "border-blue-500 bg-blue-50/70 scale-105"
                                                 : uploadedFile
-                                                ? "border-green-500 bg-green-50/70 scale-105"
-                                                : "border-gray-300 bg-white/70 hover:border-blue-400 hover:bg-blue-50/70 hover:scale-105"
-                                        }`}
+                                                    ? "border-green-500 bg-green-50/70 scale-105"
+                                                    : "border-gray-300 bg-white/70 hover:border-blue-400 hover:bg-blue-50/70 hover:scale-105"
+                                            }`}
                                         onDrop={handleDrop}
                                         onDragOver={handleDragOver}
                                         onDragLeave={handleDragLeave}
@@ -459,54 +467,49 @@ if (selectedOptions.includes("flashcards")) {
                                                                 option.id
                                                             )
                                                         }
-                                                        className={`relative p-6 rounded-2xl border-2 cursor-pointer transition-all duration-300 transform hover:scale-105 backdrop-blur-sm animate-fade-in ${
-                                                            selectedOptions.includes(
-                                                                option.id
-                                                            )
+                                                        className={`relative p-6 rounded-2xl border-2 cursor-pointer transition-all duration-300 transform hover:scale-105 backdrop-blur-sm animate-fade-in ${selectedOptions.includes(
+                                                            option.id
+                                                        )
                                                                 ? `border-${option.color}-500 bg-${option.color}-50/70 scale-105`
                                                                 : "border-gray-200 bg-white/70 hover:border-gray-300"
-                                                        }`}
+                                                            }`}
                                                         style={{
-                                                            animationDelay: `${
-                                                                0.7 +
+                                                            animationDelay: `${0.7 +
                                                                 index * 0.1
-                                                            }s`,
+                                                                }s`,
                                                         }}
                                                     >
                                                         {selectedOptions.includes(
                                                             option.id
                                                         ) && (
-                                                            <div className="absolute top-4 right-4 animate-bounce">
-                                                                <Check className="w-5 h-5 text-green-600" />
-                                                            </div>
-                                                        )}
+                                                                <div className="absolute top-4 right-4 animate-bounce">
+                                                                    <Check className="w-5 h-5 text-green-600" />
+                                                                </div>
+                                                            )}
                                                         <div
-                                                            className={`w-12 h-12 rounded-full mb-4 flex items-center justify-center transition-all duration-300 ${
-                                                                option.color ===
-                                                                "blue"
+                                                            className={`w-12 h-12 rounded-full mb-4 flex items-center justify-center transition-all duration-300 ${option.color ===
+                                                                    "blue"
                                                                     ? "bg-blue-100"
                                                                     : option.color ===
-                                                                      "purple"
-                                                                    ? "bg-purple-100"
-                                                                    : "bg-pink-100"
-                                                            } ${
-                                                                selectedOptions.includes(
+                                                                        "purple"
+                                                                        ? "bg-purple-100"
+                                                                        : "bg-pink-100"
+                                                                } ${selectedOptions.includes(
                                                                     option.id
                                                                 )
                                                                     ? "animate-pulse"
                                                                     : ""
-                                                            }`}
+                                                                }`}
                                                         >
                                                             <div
-                                                                className={`${
-                                                                    option.color ===
-                                                                    "blue"
+                                                                className={`${option.color ===
+                                                                        "blue"
                                                                         ? "text-blue-600"
                                                                         : option.color ===
-                                                                          "purple"
-                                                                        ? "text-purple-600"
-                                                                        : "text-pink-600"
-                                                                }`}
+                                                                            "purple"
+                                                                            ? "text-purple-600"
+                                                                            : "text-pink-600"
+                                                                    }`}
                                                             >
                                                                 {option.icon}
                                                             </div>
@@ -566,41 +569,40 @@ if (selectedOptions.includes("flashcards")) {
                         )}
 
                         {/* Processing State - UPDATED with upload status */}
-               {/* Processing State - UPDATED with upload status removed */}
-{isProcessing && (
-    <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-12 text-center shadow-xl animate-fade-in">
-        <div className="w-24 h-24 mx-auto mb-8 relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full animate-spin">
-                <div className="w-full h-full bg-white rounded-full m-1"></div>
-            </div>
-            <div className="absolute inset-0 flex items-center justify-center">
-                <Brain className="w-8 h-8 text-blue-600 animate-pulse" />
-            </div>
-        </div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            Processing Your PDF
-        </h2>
-        <p className="text-lg text-gray-600 mb-8 animate-pulse">
-            {processingSteps[processingStep]}
-        </p>
-        <div className="w-full bg-gray-200 rounded-full h-3 mb-4">
-            <div
-                className="bg-gradient-to-r from-blue-500 to-purple-600 h-3 rounded-full transition-all duration-1000 animate-pulse"
-                style={{
-                    width: `${
-                        ((processingStep + 1) /
-                            processingSteps.length) *
-                        100
-                    }%`,
-                }}
-            ></div>
-        </div>
-        <p className="text-sm text-gray-500">
-            {processingStep + 1} of{" "}
-            {processingSteps.length} steps completed
-        </p>
-    </div>
-)}
+                        {/* Processing State - UPDATED with upload status removed */}
+                        {isProcessing && (
+                            <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-12 text-center shadow-xl animate-fade-in">
+                                <div className="w-24 h-24 mx-auto mb-8 relative">
+                                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full animate-spin">
+                                        <div className="w-full h-full bg-white rounded-full m-1"></div>
+                                    </div>
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        <Brain className="w-8 h-8 text-blue-600 animate-pulse" />
+                                    </div>
+                                </div>
+                                <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                                    Processing Your PDF
+                                </h2>
+                                <p className="text-lg text-gray-600 mb-8 animate-pulse">
+                                    {processingSteps[processingStep]}
+                                </p>
+                                <div className="w-full bg-gray-200 rounded-full h-3 mb-4">
+                                    <div
+                                        className="bg-gradient-to-r from-blue-500 to-purple-600 h-3 rounded-full transition-all duration-1000 animate-pulse"
+                                        style={{
+                                            width: `${((processingStep + 1) /
+                                                    processingSteps.length) *
+                                                100
+                                                }%`,
+                                        }}
+                                    ></div>
+                                </div>
+                                <p className="text-sm text-gray-500">
+                                    {processingStep + 1} of{" "}
+                                    {processingSteps.length} steps completed
+                                </p>
+                            </div>
+                        )}
                         {/* Results */}
                         {results && (
                             <div className="space-y-8 animate-fade-in">
@@ -618,26 +620,26 @@ if (selectedOptions.includes("flashcards")) {
 
                                 <div className="grid gap-6">
                                     {results.summary && (
-  <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 animate-fade-in">
-    <div className="flex items-center mb-4">
-      <FileText className="w-6 h-6 text-blue-600 mr-3" />
-      <h3 className="text-xl font-semibold text-gray-900">
-        Smart Summary
-      </h3>
-    </div>
-    <div className="text-gray-700 mb-6 whitespace-pre-wrap">
-      {results.summary.content}
-    </div>
-    <button
-      onClick={() =>
-        downloadContent(results.summary.content, "summary.txt")
-      }
-      className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-all"
-    >
-      Download Summary
-    </button>
-  </div>
-)}
+                                        <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 animate-fade-in">
+                                            <div className="flex items-center mb-4">
+                                                <FileText className="w-6 h-6 text-blue-600 mr-3" />
+                                                <h3 className="text-xl font-semibold text-gray-900">
+                                                    Smart Summary
+                                                </h3>
+                                            </div>
+                                            <div className="text-gray-700 mb-6 whitespace-pre-wrap">
+                                                {results.summary.content}
+                                            </div>
+                                            <button
+                                                onClick={() =>
+                                                    downloadContent(results.summary.content, "summary.txt")
+                                                }
+                                                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-all"
+                                            >
+                                                Download Summary
+                                            </button>
+                                        </div>
+                                    )}
 
 
                                     {/* Show flashcards when results are available */}
@@ -651,11 +653,11 @@ if (selectedOptions.includes("flashcards")) {
 
                                     {/* Quiz Section */}
 
-                                  
+
                                     <QuizResultsSection
                                         results={results}
                                         uploadedFile={uploadedFile}
-                                        onStartQuiz={() => {}}
+                                        onStartQuiz={() => { }}
                                     />
                                 </div>
 
