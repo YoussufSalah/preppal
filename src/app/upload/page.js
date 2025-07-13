@@ -237,30 +237,10 @@ const PDFUploadPage = () => {
             setProcessingStep(5);
         } catch (err) {
   setError(err.message);
-  const errorMessage = err.message || "";
-
-  if (
-    errorMessage.includes("row-level security") ||
-    errorMessage.includes("violates row-level security") ||
-    errorMessage.includes("new row violates row-level security policy")
-  ) {
-    // 🔐 logout user 
-    try {
-    await signOut();
-    router.push("/login?error=reauth"); // ✅ triggers toast on login
-  } catch (logoutError) {
-    console.error("Signout failed:", logoutError);
-    localStorage.removeItem("accessToken");
-    router.push("/login?error=reauth"); // fallback redirect
-  }
-    return; // make sure we don't fall through and call setError() again
+  // make sure we don't fall through and call setError() again
   }
 
-  // all other errors
-  setError(errorMessage);
-
-
-        } finally {
+        finally {
             setIsProcessing(false);
             setIsUploading(false);
             setIsGeneratingFlashcards(false);
