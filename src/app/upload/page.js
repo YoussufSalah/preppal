@@ -152,7 +152,7 @@ const PDFUploadPage = () => {
                 return flashcards;
             }
 
-            if (type === "quit"){
+            if (type === "quiz"){
                 const response = await apiService.generatePDFQuiz(uploadId, token);
                 if (response?.status === "success"){
                     return response.data.quiz;
