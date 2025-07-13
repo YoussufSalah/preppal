@@ -11,7 +11,7 @@ const BetaNotice = () => {
         </div>
         <div className="ml-3">
           <p className="text-sm text-blue-700">
-            Since PrepPal is still in beta, we're using free LLM model for testing. We'll use better models on the official launch.
+            Since PrepPal is still in beta, we&apos;re using free LLM model for testing. We&apos;ll use better models on the official launch.
           </p>
         </div>
       </div>
