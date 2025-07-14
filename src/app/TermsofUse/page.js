@@ -250,98 +250,98 @@ const TermsOfUse = () => {
                   </p>
                 </div>
               </div>
-            </section>
-            {/* Refund Policy */}
-            <section className="mb-12">
-              <div className="flex items-center mb-6">
-                <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center mr-4">
-                  <CheckCircle className="w-5 h-5 text-emerald-500" />
-                </div>
-                <h2 className="text-2xl font-bold text-gray-900">Refund Policy</h2>
-              </div>
-              
-              <div className="space-y-6">
-                <div className="bg-gradient-to-r from-emerald-50 to-teal-50 p-6 rounded-xl">
-                  <p className="text-gray-700 leading-relaxed">
-                    We want you to be completely satisfied with PrepPal. If you're not happy with our service, we offer a fair and transparent refund policy designed to protect both you and our business.
-                  </p>
-                </div>
-                
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="border border-emerald-200 rounded-lg p-6">
-                    <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center mb-4">
-                      <CheckCircle className="w-5 h-5 text-emerald-500" />
-                    </div>
-                    <h3 className="font-semibold text-gray-900 mb-3">14-Day Money-Back Guarantee</h3>
-                    <ul className="text-sm text-gray-600 space-y-2">
-                      <li>• Full refund within 14 days of first purchase</li>
-                      <li>• No questions asked for new subscribers</li>
-                      <li>• Applies to monthly and annual subscriptions</li>
-                      <li>• Easy refund process through support</li>
-                    </ul>
-                  </div>
-                  
-                  <div className="border border-blue-200 rounded-lg p-6">
-                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                      <Scale className="w-5 h-5 text-blue-500" />
-                    </div>
-                    <h3 className="font-semibold text-gray-900 mb-3">Prorated Refunds</h3>
-                    <ul className="text-sm text-gray-600 space-y-2">
-                      <li>• Annual subscribers: prorated refund available</li>
-                      <li>• Calculated based on unused months</li>
-                      <li>• Processing fee may apply after 30 days</li>
-                      <li>• Subject to usage terms and conditions</li>
-                    </ul>
-                  </div>
-                </div>
-                
-                <div className="bg-gradient-to-r from-yellow-50 to-orange-50 p-6 rounded-xl">
-                  <h3 className="font-semibold text-gray-900 mb-3">Refund Conditions</h3>
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <h4 className="font-medium text-gray-900 mb-2">Eligible for Refund:</h4>
-                      <ul className="text-sm text-gray-600 space-y-1">
-                        <li>• Technical issues preventing service use</li>
-                        <li>• Service not meeting advertised features</li>
-                        <li>• Billing errors or unauthorized charges</li>
-                        <li>• Account cancellation within guarantee period</li>
-                      </ul>
-                    </div>
-                    <div>
-                      <h4 className="font-medium text-gray-900 mb-2">Not Eligible for Refund:</h4>
-                      <ul className="text-sm text-gray-600 space-y-1">
-                        <li>• Accounts terminated for policy violations</li>
-                        <li>• Requests after guarantee period expires</li>
-                        <li>• Excessive usage or abuse of service</li>
-                        <li>• Change of mind after extended use</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="border-l-4 border-emerald-500 pl-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">How to Request a Refund</h3>
-                  <div className="space-y-3">
-                    <p className="text-gray-600">To request a refund, please follow these steps:</p>
-                    <ol className="text-gray-600 space-y-1 list-decimal list-inside">
-                      <li>Contact our support team via email or in-app chat</li>
-                      <li>Provide your account details and reason for refund</li>
-                      <li>Allow up to 2 business days for review</li>
-                      <li>Approved refunds processed within 5-7 business days</li>
-                    </ol>
-                  </div>
-                </div>
-                
-                <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                  <div className="flex items-center">
-                    <AlertTriangle className="w-5 h-5 text-blue-600 mr-2" />
-                    <p className="text-sm text-blue-800">
-                      <strong>Processing Time:</strong> Refunds are processed back to your original payment method. Bank processing times may vary (typically 5-10 business days). PayPal refunds are usually instant.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </section>
+            </section>{/* Refund Policy */}
+<section className="mb-12">
+  <div className="flex items-center mb-6">
+    <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center mr-4">
+      <CheckCircle className="w-5 h-5 text-emerald-500" />
+    </div>
+    <h2 className="text-2xl font-bold text-gray-900">Refund Policy</h2>
+  </div>
+
+  <div className="space-y-6">
+    <div className="bg-gradient-to-r from-emerald-50 to-teal-50 p-6 rounded-xl">
+      <p className="text-gray-700 leading-relaxed">
+        {"We want you to be completely satisfied with PrepPal. If you're not happy with our service, we offer a fair and transparent refund policy designed to protect both you and our business."}
+      </p>
+    </div>
+
+    <div className="grid md:grid-cols-2 gap-6">
+      <div className="border border-emerald-200 rounded-lg p-6">
+        <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center mb-4">
+          <CheckCircle className="w-5 h-5 text-emerald-500" />
+        </div>
+        <h3 className="font-semibold text-gray-900 mb-3">7-Day Money-Back Guarantee</h3>
+        <ul className="text-sm text-gray-600 space-y-2">
+          <li>• Full refund within 14 days of first purchase</li>
+          <li>• No questions asked for new subscribers</li>
+          <li>• Applies to monthly and annual subscriptions</li>
+          <li>• Easy refund process through support</li>
+        </ul>
+      </div>
+
+      <div className="border border-blue-200 rounded-lg p-6">
+        <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+          <Scale className="w-5 h-5 text-blue-500" />
+        </div>
+        <h3 className="font-semibold text-gray-900 mb-3">Prorated Refunds</h3>
+        <ul className="text-sm text-gray-600 space-y-2">
+          <li>• Annual subscribers: prorated refund available</li>
+          <li>• Calculated based on unused months</li>
+          <li>• Processing fee may apply after 30 days</li>
+          <li>• Subject to usage terms and conditions</li>
+        </ul>
+      </div>
+    </div>
+
+    <div className="bg-gradient-to-r from-yellow-50 to-orange-50 p-6 rounded-xl">
+      <h3 className="font-semibold text-gray-900 mb-3">Refund Conditions</h3>
+      <div className="grid md:grid-cols-2 gap-4">
+        <div>
+          <h4 className="font-medium text-gray-900 mb-2">Eligible for Refund:</h4>
+          <ul className="text-sm text-gray-600 space-y-1">
+            <li>• Technical issues preventing service use</li>
+            <li>• Service not meeting advertised features</li>
+            <li>• Billing errors or unauthorized charges</li>
+            <li>• Account cancellation within guarantee period</li>
+          </ul>
+        </div>
+        <div>
+          <h4 className="font-medium text-gray-900 mb-2">Not Eligible for Refund:</h4>
+          <ul className="text-sm text-gray-600 space-y-1">
+            <li>• Accounts terminated for policy violations</li>
+            <li>• Requests after guarantee period expires</li>
+            <li>• Excessive usage or abuse of service</li>
+            <li>• Change of mind after extended use</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div className="border-l-4 border-emerald-500 pl-6">
+      <h3 className="text-lg font-semibold text-gray-900 mb-2">How to Request a Refund</h3>
+      <div className="space-y-3">
+        <p className="text-gray-600">{"To request a refund, please follow these steps:"}</p>
+        <ol className="text-gray-600 space-y-1 list-decimal list-inside">
+          <li>Contact our support team via email or in-app chat</li>
+          <li>Provide your account details and reason for refund</li>
+          <li>Allow up to 2 business days for review</li>
+          <li>Approved refunds processed within 5-7 business days</li>
+        </ol>
+      </div>
+    </div>
+
+    <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+      <div className="flex items-center">
+        <AlertTriangle className="w-5 h-5 text-blue-600 mr-2" />
+        <p className="text-sm text-blue-800">
+          <strong>Processing Time:</strong>{" Refunds are processed back to your original payment method. Bank processing times may vary (typically 5-10 business days). PayPal refunds are usually instant."}
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
             {/* Termination */}
             <section className="mb-12">
               <div className="flex items-center mb-6">
