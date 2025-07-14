@@ -20,6 +20,8 @@ import { getToken, getUserTokens, signOut, useTokens } from "../../utils/auth.js
 import ModernFlashcards from "../components/flashcard";
 import QuizResultsSection from "../components/quiz";
 import BetaNotice from "../components/betaNotice";
+import ReactMarkdown from "react-markdown";
+
 
 const PDFUploadPage = () => {
     const [uploadedFile, setUploadedFile] = useState(null);
@@ -649,9 +651,10 @@ const handleGenerate = async () => {
                                                     Smart Summary
                                                 </h3>
                                             </div>
-                                            <div className="text-gray-700 mb-6 whitespace-pre-wrap">
-                                                {results.summary.content}
+                                            <div className="prose prose-lg text-gray-700 mb-6 max-w-none">
+                                                <ReactMarkdown>{results.summary.content}</ReactMarkdown>
                                             </div>
+
                                             <button
                                                 onClick={() =>
                                                     downloadContent(results.summary.content, "summary.txt")
