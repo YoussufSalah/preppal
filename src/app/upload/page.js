@@ -168,35 +168,41 @@ const PDFUploadPage = () => {
         }
     };
 
-    const handleGenerate = async () => {
-        if (!uploadedFile || selectedOptions.length === 0) return;
+const handleGenerate = async () => {
+    if (!uploadedFile || selectedOptions.length === 0) return;
 
-        setIsProcessing(true);
-        setIsUploading(true);
-        setProcessingStep(0);
-        setError(null);
+    setIsProcessing(true);
+    setIsUploading(true);
+    setProcessingStep(0);
+    setError(null);
 
-        try {
-            const uploadId = await uploadPdfToLevi(uploadedFile);
+    try {
+        const uploadId = await uploadPdfToLevi(uploadedFile);
+        const generatedResults = {};
 
-            const generatedResults = {};
-
-            if (selectedOptions.includes("summary")) {
+        // Handle Summary Generation
+        if (selectedOptions.includes("summary")) {
+            try {
                 const response = await requestAI(uploadId, "summary");
-
                 if (response && response.summary) {
                     generatedResults.summary = {
                         content: response.summary,
                     };
                 } else {
                     generatedResults.summary = {
-                        content: "Summary generation failed or returned no data.",
+                        error: "Summary generation failed or returned no data.",
                     };
                 }
+            } catch (err) {
+                generatedResults.summary = {
+                    error: `Summary generation failed: ${err.message}`,
+                };
             }
+        }
 
-
-            if (selectedOptions.includes("flashcards")) {
+        // Handle Flashcards Generation
+        if (selectedOptions.includes("flashcards")) {
+            try {
                 const response = await requestAI(uploadId, "flashcards");
                 const flashcardsArray = response.flashcards || response.data?.flashcards || response.data;
 
@@ -214,14 +220,17 @@ const PDFUploadPage = () => {
 
                 generatedResults.flashcards = formattedFlashcards;
                 setFlashcardData(formattedFlashcards);
+            } catch (err) {
+                generatedResults.flashcards = {
+                    error: `Flashcards generation failed: ${err.message}`,
+                };
             }
+        }
 
-
-
-
-            if (selectedOptions.includes("quiz")) {
+        // Handle Quiz Generation
+        if (selectedOptions.includes("quiz")) {
+            try {
                 const response = await requestAI(uploadId, "quiz");
-
                 if (response && response.questionsData && Array.isArray(response.questionsData)) {
                     console.log("✅ Quiz data received:", response);
                     generatedResults.quiz = response;
@@ -230,22 +239,26 @@ const PDFUploadPage = () => {
                         error: "Quiz generation failed or returned invalid format.",
                     };
                 }
+            } catch (err) {
+                generatedResults.quiz = {
+                    error: `Quiz generation failed: ${err.message}`,
+                };
             }
-
-
-            setResults(generatedResults);
-            setProcessingStep(5);
-        } catch (err) {
-  setError(err.message);
-  // make sure we don't fall through and call setError() again
-  }
-
-        finally {
-            setIsProcessing(false);
-            setIsUploading(false);
-            setIsGeneratingFlashcards(false);
         }
-    };
+
+        // Always set results, even if some operations failed
+        setResults(generatedResults);
+        setProcessingStep(5);
+
+    } catch (err) {
+        // This catch block now only handles upload errors or other critical failures
+        setError(err.message);
+    } finally {
+        setIsProcessing(false);
+        setIsUploading(false);
+        setIsGeneratingFlashcards(false);
+    }
+};
 
     const resetUpload = () => {
         setUploadedFile(null);

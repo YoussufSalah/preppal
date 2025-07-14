@@ -476,7 +476,22 @@ const QuizResultsSection = ({ results, uploadedFile, onStartQuiz, isLoading = fa
       </div>
     );
   }
+// Add this check right after the "No quiz in results" check and before the structure validation:
 
+  // Check for quiz generation error
+  if (results.quiz.error) {
+    return (
+      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg">
+        <div className="flex items-center justify-center">
+          <div className="text-center">
+            <XCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Quiz Generation Error</h3>
+            <p className="text-gray-600 mb-4">{results.quiz.error}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
   // Check if quiz has the required structure - CRITICAL VALIDATION
   if (!results.quiz.questionsData || !Array.isArray(results.quiz.questionsData) || results.quiz.questionsData.length === 0) {
     return (
