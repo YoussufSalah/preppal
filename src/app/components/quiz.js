@@ -448,19 +448,7 @@ const QuizResultsSection = ({ results, uploadedFile, onStartQuiz, isLoading = fa
   }
 
   // No results yet
-  if (!results) {
-    return (
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg">
-        <div className="flex items-center justify-center">
-          <div className="text-center">
-            <Brain className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No Quiz Data Available</h3>
-            <p className="text-gray-600">Upload a PDF and select &apos;Quiz&apos; to generate practice questions.</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  
 
   // No quiz in results
   if (!results.quiz) {
