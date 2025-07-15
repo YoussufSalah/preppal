@@ -1,17 +1,24 @@
 // lib/usePaddleCheckout.js
-
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export const usePaddleCheckout = () => {
+    const [isReady, setIsReady] = useState(false);
+
     useEffect(() => {
-        if (typeof window !== "undefined" && window.Paddle) {
-            window.Paddle.Environment?.set(process.env.NEXT_PUBLIC_PADDLE_ENV);
-            window.Paddle.Initialize({
-                token: process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN,
-                checkout: { settings: { variant: "one-page" } },
-            });
+        if (typeof window !== "undefined") {
+            const interval = setInterval(() => {
+                if (
+                    window.Paddle &&
+                    typeof window.Paddle.Checkout?.open === "function"
+                ) {
+                    setIsReady(true);
+                    clearInterval(interval);
+                }
+            }, 200); // check every 200ms
+
+            return () => clearInterval(interval);
         }
     }, []);
 
@@ -22,7 +29,11 @@ export const usePaddleCheckout = () => {
         subscriptionPeriod,
         token,
     }) => {
-        if (!window?.Paddle) return alert("Checkout not ready yet.");
+        if (!isReady) {
+            return alert(
+                "⚠️ Paddle is still initializing. Try again in a few seconds."
+            );
+        }
 
         window.Paddle.Checkout.open({
             items: [{ priceId }],
@@ -44,7 +55,7 @@ export const usePaddleCheckout = () => {
                 const result = await res.json();
                 if (result.status === "success") {
                     alert("🎉 Subscription activated!");
-                    location.reload(); // or navigate to dashboard
+                    location.reload();
                 } else {
                     alert("❌ Something went wrong: " + result.msg);
                 }
@@ -52,5 +63,5 @@ export const usePaddleCheckout = () => {
         });
     };
 
-    return { openCheckout };
+    return { openCheckout, isReady };
 };
