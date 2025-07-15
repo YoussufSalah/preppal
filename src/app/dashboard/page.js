@@ -1,23 +1,27 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { User, Calendar, Trophy, TrendingUp, FileText, Brain, Zap, Target, Award, Star, Flame, BookOpen, Clock, BarChart3 } from 'lucide-react';
 import { getCurrentUser, signOut } from "../../utils/auth.js";
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [user, setUser] = useState(null)
+  const [email, setEmail] = useEffect('')
   
   useEffect(() => {
-          const fetchUser = async () => {
-              try {
-                  const userData = await getCurrentUser();
-                  setUser(userData);
-              } catch (error) {
-                  console.error("Failed to fetch user:", error);
-              }
-          };
-  
-          fetchUser();
-      }, []);
+    async function loadUser() {
+        try{
+            const user = await getCurrentUser();
+            if(user?.email) {
+                setEmail(user.email);
+            } else {
+                setEmail('youremail@preppal.com')
+            }
+        } catch (err) {
+            console.log('Error fetching user:', err);
+        }
+    }
+    loadUser();
+  }, []);
   // Mock user data
   const userData = {
     name: "Alex Johnson",
@@ -107,7 +111,7 @@ const Dashboard = () => {
             </div>
             <div className="flex-1">
               <h2 className="text-2xl font-bold text-gray-900">{userData.name}</h2>
-              <p className="text-gray-600">{user.email}</p>
+              <p className="text-gray-600">{email}</p>
               <p className="text-sm text-gray-500 mt-1">Member since {userData.joinDate}</p>
             </div>
             <div className="text-right">
