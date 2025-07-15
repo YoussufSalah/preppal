@@ -1,6 +1,6 @@
 "use client";
 import { useEffect } from "react";
-import jwtDecode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import { apiService } from "../../utils/APIService.js";
 
 export default function PlansPage() {
