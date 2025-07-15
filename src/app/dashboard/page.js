@@ -355,28 +355,28 @@ const Dashboard = () => {
                     <StatCard
                         icon={FileText}
                         title="Total Summaries"
-                        value={userData.totalSummaries}
+                        value={25}
                         subtitle="This month: 12"
                         color="bg-blue-500"
                     />
                     <StatCard
                         icon={Brain}
                         title="Quizzes Taken"
-                        value={userData.totalQuizzes}
-                        subtitle={`${userData.accuracy}% avg score`}
+                        value={40}
+                        subtitle={'32% avg score'}
                         color="bg-green-500"
                     />
                     <StatCard
                         icon={Zap}
                         title="Flashcards Created"
-                        value={userData.totalFlashcards}
+                        value={45}
                         subtitle="Across 8 subjects"
                         color="bg-purple-500"
                     />
                     <StatCard
                         icon={Clock}
                         title="Study Time"
-                        value={`${userData.studyTime}h`}
+                        value={'20h'}
                         subtitle="This month"
                         color="bg-orange-500"
                     />
