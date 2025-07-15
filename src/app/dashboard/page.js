@@ -4,7 +4,20 @@ import { User, Calendar, Trophy, TrendingUp, FileText, Brain, Zap, Target, Award
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
+  const [user, setUser] = useState(null)
   
+  useEffect(() => {
+          const fetchUser = async () => {
+              try {
+                  const userData = await getCurrentUser();
+                  setUser(userData);
+              } catch (error) {
+                  console.error("Failed to fetch user:", error);
+              }
+          };
+  
+          fetchUser();
+      }, []);
   // Mock user data
   const userData = {
     name: "Alex Johnson",
@@ -94,7 +107,7 @@ const Dashboard = () => {
             </div>
             <div className="flex-1">
               <h2 className="text-2xl font-bold text-gray-900">{userData.name}</h2>
-              <p className="text-gray-600">{userData.email}</p>
+              <p className="text-gray-600">{user?.email}</p>
               <p className="text-sm text-gray-500 mt-1">Member since {userData.joinDate}</p>
             </div>
             <div className="text-right">
