@@ -5,11 +5,12 @@
 import { useEffect } from "react";
 
 export const usePaddleCheckout = () => {
-    console.log(process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN);
     useEffect(() => {
         if (typeof window !== "undefined" && window.Paddle) {
-            window.Paddle.Setup({
+            window.Paddle.Environment?.set(process.env.NEXT_PUBLIC_PADDLE_ENV);
+            window.Paddle.Initialize({
                 token: process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN,
+                checkout: { settings: { variant: "one-page" } },
             });
         }
     }, []);
