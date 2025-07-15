@@ -7,7 +7,7 @@ export default function PlansPage() {
 
     const handleSubscribe = () => {
         openCheckout({
-            priceId: "pri_123abc", // Paddle price ID
+            priceId: "pri_01k05grsa4vqw35evbbj16scvb", // Paddle price ID
             amountPaid: 3.99, // Price
             subscriptionTypeName: "starter", // e.g., "starter"
             subscriptionPeriod: "monthly", // e.g., "monthly"
