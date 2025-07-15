@@ -451,11 +451,11 @@ const TermsOfUse = () => {
                             <div className="space-y-6">
                                 <div className="bg-gradient-to-r from-emerald-50 to-teal-50 p-6 rounded-xl">
                                     <p className="text-blue-500 mb-6 leading-relaxed">
-                                        If you have any questions about these
-                                        Terms of Use, need clarification on any
-                                        provisions, or want to report a
-                                        violation, please don’t hesitate to
-                                        contact us.
+                                        We offer a 14 day refund window for all purchases. 
+                                        Refunds are handled by Paddle, our payment provider.
+                                        Refunds are granted at Paddle&apos;s sole discretion and may be refused in cases of fraud,
+                                        abuse, or manipulative behavior. Paddle may also counterclaim a refund if misuse is detected.
+                                        For refund requests, please refer to your Paddle receipt or contact us 
                                     </p>
                                 </div>
                                 {/* Existing refund policy content remains unchanged */}
