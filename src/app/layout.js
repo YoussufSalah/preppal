@@ -3,6 +3,7 @@ import "./globals.css";
 import Footer from "./components/footer";
 import NavbarWrapper from "./components/NavbarWrapper";
 import { Toaster } from "sonner";
+import Script from "next/script";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -50,11 +51,6 @@ export default function RootLayout({ children }) {
                 />
                 <link rel="icon" href="/preppal-icon.png" />
                 <title>PrepPal - Your Smart Study Companion</title>
-                {/* ✅ Paddle JS */}
-                <script
-                    src="https://cdn.paddle.com/paddle/v2/paddle.js"
-                    strategy="beforeInteractive"
-                />
                 <meta
                     name="description"
                     content="PrepPal summarizes your PDFs, highlights key points, and generates quizzes to help you learn smarter and faster."
@@ -84,6 +80,10 @@ export default function RootLayout({ children }) {
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
                 <NavbarWrapper />
+                <Script
+                    src="https://cdn.paddle.com/paddle/v2/paddle.js"
+                    strategy="beforeInteractive"
+                />
                 <Toaster richColors position="top-right" />
                 {children}
                 <Footer />
