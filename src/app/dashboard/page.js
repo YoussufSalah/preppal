@@ -4,7 +4,6 @@ import { User, Calendar, Trophy, TrendingUp, FileText, Brain, Zap, Target, Award
 import { getCurrentUser, signOut } from "../../utils/auth.js";
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
-  const [user, setUser] = useState(null)
   const [email, setEmail] = useEffect('')
   
   useEffect(() => {
@@ -25,7 +24,6 @@ const Dashboard = () => {
   // Mock user data
   const userData = {
     name: "Alex Johnson",
-    email: "alex.johnson@email.com",
     joinDate: "January 2024",
     streak: 12,
     totalSummaries: 45,
