@@ -14,9 +14,12 @@ const Dashboard = () => {
             const user = await getCurrentUser();
             console.log("Loaded user:", user);
             if(user) {
-                setEmail(user.email || 'youremail@preppal.com');
-                setUsername(user.username || 'User name');
-            } 
+                setEmail(user.email);
+                setUsername(user.username );
+            } else {
+                setEmail('youremail@preppal.com');
+                setUsername('YourUsername');
+            }
         } catch (err) {
             console.log('Error fetching user:', err);
         }
