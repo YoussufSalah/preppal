@@ -1,6 +1,6 @@
 // app/upload/layout.js
 
-import PrepPalNavbar from "./uniqueNavbar";
+import PrepPalNavbar from "./dashboardNavbar";
 
 export default function DashboardLayout({ children }) {
   return (
