@@ -437,30 +437,19 @@ const TermsOfUse = () => {
                                 </div>
                             </div>
                         </section>
-                        {/* Refund Policy */}
-                        <section className="mb-12">
-                            <div className="flex items-center mb-6">
-                                <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center mr-4">
-                                    <CheckCircle className="w-5 h-5 text-emerald-500" />
-                                </div>
-                                <h2 className="text-2xl font-bold text-gray-900">
-                                    Refund Policy
-                                </h2>
-                            </div>
+                       <section className="max-w-2xl mx-auto px-4 py-8">
+  <h1 className="text-2xl font-bold mb-4">Refund Policy</h1>
+  <p className="mb-4">
+    We offer a <strong>14-day refund window</strong> for all purchases. Refunds are handled by <strong>Paddle</strong>, our payment provider.
+  </p>
+  <p className="mb-4">
+    Refunds are granted <strong>at Paddle&apos;s sole discretion</strong> and may be <strong>refused</strong> in cases of <strong>fraud, abuse, or manipulative behavior</strong>. Paddle may also <strong>counterclaim</strong> a refund if misuse is detected.
+  </p>
+  <p>
+    For refund requests, please refer to your Paddle receipt or contact us.
+  </p>
+</section>
 
-                            <div className="space-y-6">
-                                <div className="bg-gradient-to-r from-emerald-50 to-teal-50 p-6 rounded-xl">
-                                    <p className="text-blue-500 mb-6 leading-relaxed">
-                                        We offer a 14 day refund window for all purchases. 
-                                        Refunds are handled by Paddle, our payment provider.
-                                        Refunds are granted at Paddle&apos;s sole discretion and may be refused in cases of fraud,
-                                        abuse, or manipulative behavior. Paddle may also counterclaim a refund if misuse is detected.
-                                        For refund requests, please refer to your Paddle receipt or contact us 
-                                    </p>
-                                </div>
-                                {/* Existing refund policy content remains unchanged */}
-                            </div>
-                        </section>
 
                         <section className="mb-12">
                             <div className="flex items-center mb-6">
