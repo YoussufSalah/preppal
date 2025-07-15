@@ -5,17 +5,18 @@ import { getCurrentUser, signOut } from "../../utils/auth.js";
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('');
+
   
   useEffect(() => {
     async function loadUser() {
         try{
             const user = await getCurrentUser();
             console.log("Loaded user:", user);
-            if(user?.email) {
-                setEmail(user.email);
-            } else {
-                setEmail('youremail@preppal.com')
-            }
+            if(user) {
+                setEmail(user.email || 'youremail@preppal.com');
+                setUsername(user.username || 'User name');
+            } 
         } catch (err) {
             console.log('Error fetching user:', err);
         }
@@ -24,7 +25,6 @@ const Dashboard = () => {
   }, []);
   // Mock user data
   const userData = {
-    name: "Alex Johnson",
     joinDate: "January 2024",
     streak: 12,
     totalSummaries: 45,
@@ -109,7 +109,7 @@ const Dashboard = () => {
               </span>
             </div>
             <div className="flex-1">
-              <h2 className="text-2xl font-bold text-gray-900">{userData.name}</h2>
+              <h2 className="text-2xl font-bold text-gray-900">{username}</h2>
               <p className="text-gray-600">{email}</p>
               <p className="text-sm text-gray-500 mt-1">Member since {userData.joinDate}</p>
             </div>
