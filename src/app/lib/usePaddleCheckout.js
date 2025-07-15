@@ -9,7 +9,6 @@ export const usePaddleCheckout = () => {
         if (typeof window !== "undefined" && window.Paddle) {
             window.Paddle.Setup({
                 token: process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN,
-                environment: "sandbox", // or "production" later
             });
         }
     }, []);
