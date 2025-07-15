@@ -4,12 +4,13 @@ import { User, Calendar, Trophy, TrendingUp, FileText, Brain, Zap, Target, Award
 import { getCurrentUser, signOut } from "../../utils/auth.js";
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
-  const [email, setEmail] = useEffect('')
+  const [email, setEmail] = useState('')
   
   useEffect(() => {
     async function loadUser() {
         try{
             const user = await getCurrentUser();
+            console.log("Loaded user:", user);
             if(user?.email) {
                 setEmail(user.email);
             } else {
