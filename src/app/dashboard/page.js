@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from 'react';
 import { User, Calendar, Trophy, TrendingUp, FileText, Brain, Zap, Target, Award, Star, Flame, BookOpen, Clock, BarChart3 } from 'lucide-react';
-
+import { getCurrentUser, signOut } from "../../utils/auth.js";
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [user, setUser] = useState(null)
