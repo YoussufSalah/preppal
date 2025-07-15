@@ -28,6 +28,7 @@ const Dashboard = () => {
   }, []);
   // Mock user data
   const userData = {
+    name: "john",
     joinDate: "January 2024",
     streak: 12,
     totalSummaries: 45,
