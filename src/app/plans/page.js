@@ -8,7 +8,6 @@ export default function PlansPage() {
         if (typeof window !== "undefined" && window.Paddle) {
             window.Paddle.Setup({
                 vendor: 34469,
-                sandbox: true, // Set to false when going live
             });
         }
     }, []);
