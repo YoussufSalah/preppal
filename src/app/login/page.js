@@ -11,7 +11,6 @@ import {
 } from "../../utils/auth.js";
 import { apiService } from "../../utils/APIService.js";
 
-
 const LoginContent = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -70,8 +69,6 @@ const LoginContent = () => {
             auth: "",
         });
     }, [isLogin]);
-
-    
 
     if (!isMounted || loading) {
         return (
@@ -484,7 +481,7 @@ const LoginContent = () => {
                                         <button
                                             type="button"
                                             onClick={() =>
-                                                router.push('/TermsofUse')
+                                                router.push("/terms")
                                             }
                                             className="text-blue-600 hover:text-blue-700 font-medium"
                                         >
@@ -494,7 +491,7 @@ const LoginContent = () => {
                                         <button
                                             type="button"
                                             onClick={() =>
-                                                router.push('/PrivacyPolicy')
+                                                router.push("/privacy-policy")
                                             }
                                             className="text-blue-600 hover:text-blue-700 font-medium"
                                         >
