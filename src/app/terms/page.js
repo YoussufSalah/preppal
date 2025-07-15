@@ -53,11 +53,9 @@ const TermsOfUse = () => {
                             <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-xl">
                                 <p className="text-gray-700 leading-relaxed">
                                     These Terms of Use constitute a legally
-                                    binding agreement between you (the "User")
-                                    and PrepPal (owned and operated by Youssuf).
-                                    By accessing or using the PrepPal platform,
-                                    you confirm your agreement to abide by these
-                                    terms and our Privacy Policy.
+                                    binding agreement between you (the
+                                    &quot;User&quot;) and PrepPal (owned and
+                                    operated by Youssuf).
                                 </p>
                             </div>
                         </div>
@@ -452,11 +450,12 @@ const TermsOfUse = () => {
 
                             <div className="space-y-6">
                                 <div className="bg-gradient-to-r from-emerald-50 to-teal-50 p-6 rounded-xl">
-                                    <p className="text-gray-700 leading-relaxed">
-                                        PrepPal complies with Paddle's Buyer
-                                        Terms and offers a fair 14-day
-                                        money-back guarantee for all new
-                                        subscribers.
+                                    <p className="text-blue-100 mb-6 leading-relaxed">
+                                        If you have any questions about these
+                                        Terms of Use, need clarification on any
+                                        provisions, or want to report a
+                                        violation, please don’t hesitate to
+                                        contact us.
                                     </p>
                                 </div>
                                 {/* Existing refund policy content remains unchanged */}
