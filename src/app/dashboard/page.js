@@ -117,7 +117,7 @@ const Dashboard = () => {
         <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 mb-8">
           <div className="flex items-center space-x-6">
             <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-              <span className="text-white text-2xl font-bold">
+              <span className="text-white text-3xl font-bold">
                
                {username ? username.split(' ').map(n => n.charAt(0).toUpperCase()).join('') : 'U'}
 
