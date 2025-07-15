@@ -450,7 +450,7 @@ const TermsOfUse = () => {
 
                             <div className="space-y-6">
                                 <div className="bg-gradient-to-r from-emerald-50 to-teal-50 p-6 rounded-xl">
-                                    <p className="text-blue-100 mb-6 leading-relaxed">
+                                    <p className="text-blue-500 mb-6 leading-relaxed">
                                         If you have any questions about these
                                         Terms of Use, need clarification on any
                                         provisions, or want to report a
