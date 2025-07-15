@@ -7,10 +7,10 @@ export default function PlansPage() {
 
     const handleSubscribe = () => {
         openCheckout({
-            priceId: "pri_01k05grsa4vqw35evbbj16scvb", // Paddle price ID
-            amountPaid: 3.99, // Price
+            priceId: "pri_01k05gx1bbtpna0kjzh92jvmf2", // Paddle price ID
+            amountPaid: 35.88, // Price
             subscriptionTypeName: "starter", // e.g., "starter"
-            subscriptionPeriod: "monthly", // e.g., "monthly"
+            subscriptionPeriod: "yearly", // e.g., "monthly"
             token: localStorage.getItem("token"), // or Supabase user session
         });
     };
@@ -22,7 +22,7 @@ export default function PlansPage() {
                 onClick={handleSubscribe}
                 className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700"
             >
-                Subscribe - Starter Monthly ($3.99)
+                Subscribe - Starter Annual ($35.88)
             </button>
         </main>
     );
