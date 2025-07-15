@@ -210,18 +210,17 @@ class APIService {
     }
 
     // Token Management
-   async getUserTokens(token) {
-    return this.makeRequest("/user/me/tokens", {
-        method: "GET",
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    });
-}
-
+    async getUserTokens(token) {
+        return this.makeRequest("/user/me/tokens", {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+    }
 
     async useTokens(amount, token) {
-        return this.makeRequest(`/user/tokens/use?amount=${amount}`, {
+        return this.makeRequest(`/user/me/tokens/use?amount=${amount}`, {
             method: "PATCH",
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -230,7 +229,7 @@ class APIService {
     }
 
     async addTokens(amount, token) {
-        return this.makeRequest(`/user/tokens/add?amount=${amount}`, {
+        return this.makeRequest(`/user/me/tokens/add?amount=${amount}`, {
             method: "PATCH",
             headers: {
                 Authorization: `Bearer ${token}`,
