@@ -109,7 +109,7 @@ const Dashboard = () => {
           <div className="flex items-center space-x-6">
             <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
               <span className="text-white text-2xl font-bold">
-                {userData.name.split(' ').map(n => n[0]).join('')}
+                {username.split(' ').map(n => n[0]).join('')}
               </span>
             </div>
             <div className="flex-1">
