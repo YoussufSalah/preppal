@@ -1,4 +1,3 @@
-// lib/usePaddleCheckout.js
 "use client";
 
 import { useEffect, useState } from "react";
@@ -13,10 +12,13 @@ export const usePaddleCheckout = () => {
                     window.Paddle &&
                     typeof window.Paddle.Checkout?.open === "function"
                 ) {
+                    window.Paddle.Setup({
+                        token: process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN,
+                    });
                     setIsReady(true);
                     clearInterval(interval);
                 }
-            }, 200); // check every 200ms
+            }, 200);
 
             return () => clearInterval(interval);
         }
@@ -30,13 +32,14 @@ export const usePaddleCheckout = () => {
         token,
     }) => {
         if (!isReady) {
-            return alert(
-                "⚠️ Paddle is still initializing. Try again in a few seconds."
-            );
+            return alert("⚠️ Paddle is still initializing. Try again.");
         }
 
         window.Paddle.Checkout.open({
             items: [{ priceId }],
+            settings: {
+                displayMode: "overlay", // CRUCIAL!
+            },
             onCheckoutComplete: async (data) => {
                 const res = await fetch("/api/paddle/success", {
                     method: "POST",

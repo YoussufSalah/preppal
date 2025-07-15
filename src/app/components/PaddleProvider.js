@@ -13,7 +13,7 @@ export default function PaddleProvider() {
                 checkout: {
                     settings: {
                         theme: "light", // or "dark"
-                        variant: "sidebar", // or "overlay", "one-page"
+                        variant: "overlay", // or "overlay", "one-page"
                     },
                 },
             });

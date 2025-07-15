@@ -85,6 +85,7 @@ export default function RootLayout({ children }) {
                     src="https://cdn.paddle.com/paddle/v2/paddle.js"
                     strategy="beforeInteractive"
                 />
+
                 <PaddleProvider />
                 <Toaster richColors position="top-right" />
                 {children}
