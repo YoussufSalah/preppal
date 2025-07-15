@@ -1,6 +1,6 @@
 "use client";
 
-import { usePaddleCheckout } from "@/lib/usePaddleCheckout";
+import { usePaddleCheckout } from "../lib/usePaddleCheckout";
 
 export default function PlansPage() {
     const { openCheckout } = usePaddleCheckout();
