@@ -1,13 +1,15 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Menu, X, Brain, User, LogOut } from "lucide-react";
+import { Menu, X, Brain, User, LogOut,Flame} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { getCurrentUser, signOut } from "../../utils/auth.js";
+
 
 const PrepPalNavbar = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [user, setUser] = useState(null);
+    const [userData,setUserData] = useState('')
     const router = useRouter();
 
     const toggleMobileMenu = () => {
@@ -46,7 +48,9 @@ const PrepPalNavbar = () => {
         { name: "About", href: "/about" },
         { name: "Pricing", href: "/pricingpage" },
     ];
-
+    setUserData({
+                    streak: 12
+            });
     return (
         <nav className="bg-white shadow-sm">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -56,7 +60,7 @@ const PrepPalNavbar = () => {
                             <Brain className="w-5 h-5 text-white" />
                         </div>
                         <span className="text-xl font-bold text-gray-900">
-                            PrepPal
+                            PrepPal Dashboard
                         </span>
                     </div>
 
@@ -73,20 +77,12 @@ const PrepPalNavbar = () => {
                     </div>
 
                     <div className="hidden md:flex items-center space-x-4">
-                        <button
-                            onClick={() => router.push("/dashboard")}
-                            className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors duration-200 px-4 py-2 rounded-lg hover:bg-blue-50"
-                        >
-                            Dashboard
-                        </button>
-
-                        {user && (
-                            <div className="flex items-center space-x-2 text-gray-700">
-                                <User className="w-5 h-5" />
-                                <span className="text-sm">{user?.email}</span>
+                            <div className="flex items-center space-x-2 bg-orange-100 px-3 py-1 rounded-full">
+                                <Flame className="w-4 h-4 text-orange-500" />
+                                <span className="text-orange-700 font-medium">
+                                    {userData.streak} day streak
+                                </span>
                             </div>
-                        )}
-
                         {user ? (
                             <button
                                 onClick={handleSignOut}
@@ -132,24 +128,8 @@ const PrepPalNavbar = () => {
                             ))}
 
                             <div className="pt-4 pb-2 space-y-2">
-                                <button
-                                    className="w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-200"
-                                    onClick={() => {
-                                        router.push("/dashboard");
-                                        setIsMobileMenuOpen(false);
-                                    }}
-                                >
-                                    Dashboard
-                                </button>
 
-                                {user && (
-                                    <div className="flex items-center space-x-2 px-3 py-2 text-gray-700">
-                                        <User className="w-5 h-5" />
-                                        <span className="text-sm">
-                                            {user?.email}
-                                        </span>
-                                    </div>
-                                )}
+                               
 
                                 {user ? (
                                     <button
