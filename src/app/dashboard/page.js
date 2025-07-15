@@ -6,6 +6,8 @@ const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [email, setEmail] = useState('')
   const [username, setUsername] = useState('');
+  const [joinDate, setJoinDate] = useState('');
+
 
   
   useEffect(() => {
@@ -16,6 +18,14 @@ const Dashboard = () => {
             if(user) {
                 setEmail(user.email);
                 setUsername(user.username );
+
+                 // Format join date (e.g. July 7, 2025)
+        const formatted = new Date(user.created_at).toLocaleDateString("en-US", {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        });
+            setJoinDate(formatted);
             } else {
                 setEmail('youremail@preppal.com');
                 setUsername('YourUsername');
@@ -29,7 +39,6 @@ const Dashboard = () => {
   // Mock user data
   const userData = {
     name: "john",
-    joinDate: "January 2024",
     streak: 12,
     totalSummaries: 45,
     totalQuizzes: 23,
@@ -109,13 +118,15 @@ const Dashboard = () => {
           <div className="flex items-center space-x-6">
             <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
               <span className="text-white text-2xl font-bold">
-                {username.split(' ').map(n => n[0]).join('')}
+               
+               {username ? username.split(' ').map(n => n.charAt(0).toUpperCase()).join('') : 'U'}
+
               </span>
             </div>
             <div className="flex-1">
               <h2 className="text-2xl font-bold text-gray-900">{username}</h2>
               <p className="text-gray-600">{email}</p>
-              <p className="text-sm text-gray-500 mt-1">Member since {userData.joinDate}</p>
+              <p className="text-sm text-gray-500 mt-1">Member since {joinDate}</p>
             </div>
             <div className="text-right">
               <div className="flex items-center space-x-2 text-green-600 mb-2">
