@@ -5,6 +5,7 @@
 import { useEffect } from "react";
 
 export const usePaddleCheckout = () => {
+    console.log(process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN);
     useEffect(() => {
         if (typeof window !== "undefined" && window.Paddle) {
             window.Paddle.Setup({
