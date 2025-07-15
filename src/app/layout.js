@@ -4,6 +4,7 @@ import Footer from "./components/footer";
 import NavbarWrapper from "./components/NavbarWrapper";
 import { Toaster } from "sonner";
 import Script from "next/script";
+import PaddleScript from "./components/PaddleScript";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -80,19 +81,7 @@ export default function RootLayout({ children }) {
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
                 <NavbarWrapper />
-                <Script
-                    src="https://cdn.paddle.com/paddle/paddle.js"
-                    strategy="beforeInteractive"
-                    onLoad={() => {
-                        if (typeof window !== "undefined" && window.Paddle) {
-                            window.Paddle.Setup({
-                                vendor: 34469,
-                                sandbox: true, // keep true for sandbox, false for production
-                            });
-                        }
-                    }}
-                />
-
+                <PaddleScript />
                 <Toaster richColors position="top-right" />
                 {children}
                 <Footer />
