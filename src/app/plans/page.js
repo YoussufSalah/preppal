@@ -11,6 +11,7 @@ export default function PlansPage() {
     const [ready, setReady] = useState(false);
     const token = apiService.getToken();
     const decoded = token ? jwtDecode(token) : null;
+    console.log(decoded);
 
     useEffect(() => {
         if (typeof window !== "undefined" && window.Paddle) {
@@ -33,16 +34,14 @@ export default function PlansPage() {
         if (!window?.Paddle || !ready) return alert("Checkout not ready");
 
         window.Paddle.Checkout.open({
-            items: [{ priceId: PRODUCTS.starter_monthly, quantity: 1 }],
-            customer: {
-                email: decoded.email,
-                name: `${decoded.first_name ?? ""} ${
-                    decoded.last_name ?? ""
-                }`.trim(),
-                metadata: {
-                    user_id: decoded.id,
-                    username: decoded.username,
+            items: [
+                {
+                    priceId: PRODUCTS.starter_monthly,
+                    quantity: 1,
                 },
+            ],
+            customer: {
+                email: decoded.email, // Must be a real valid email
             },
         });
     };
