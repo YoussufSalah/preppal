@@ -1,7 +1,5 @@
 "use client";
-import { useEffect } from "react";
-import { jwtDecode } from "jwt-decode";
-import { apiService } from "../../utils/APIService.js";
+import PaddleScript from "../components/PaddleScript";
 
 const products = {
     starter_monthly: "pri_01k05grsa4vqw35evbbj16scvb",
@@ -18,13 +16,20 @@ export default function PlansPage() {
         });
     }
     return (
-        <div>
-            <h3>
-                <code>Paddle.Checkout.open()</code>
-            </h3>
-            <a href="#" onclick="openCheckout(products.starter_monthly)">
-                <b>Sign up now (Starter Monthly)</b>
-            </a>
+        <div className="flex flex-row items-center justify-around p-4 m-4">
+            <PaddleScript />
+            <div className="flex flex-col gap-2">
+                <h3>
+                    <code>Starter Monthly ($3.99)</code>
+                </h3>
+                <a
+                    href="#"
+                    className="bg-emerald-700 text-emerald-100 w-40 h-20 rounded-xl"
+                    onClick={openCheckout(products.starter_monthly)}
+                >
+                    <b>Sign up now</b>
+                </a>
+            </div>
         </div>
     );
 }
