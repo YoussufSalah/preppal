@@ -48,6 +48,7 @@ const accessToken =
 
       try{
         const summaries = await apiService.getAllSummaries(accessToken);
+        console.log("Fetched summaries:", summaries);
         setTotalSummaryCount(summaries.length); // counts the total summaries
       } catch (err) {
         console.error("Failed to fetch summaries:", err);
