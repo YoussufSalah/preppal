@@ -1,95 +1,73 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { apiService } from "@/utils/APIService";
 import { jwtDecode } from "jwt-decode";
-import { apiService } from "../../utils/APIService.js";
+
+const PRODUCTS = {
+    starter_monthly: "pri_01k05grsa4vqw35evbbj16scvb",
+};
 
 export default function PlansPage() {
+    const [ready, setReady] = useState(false);
+    const token = apiService.getToken();
+    const decoded = token ? jwtDecode(token) : null;
+
     useEffect(() => {
         if (typeof window !== "undefined" && window.Paddle) {
-            window.Paddle.Setup({
-                vendor: 34469,
+            console.log("useEffect, Initialized Paddle: ", window.Paddle);
+            window.Paddle.Environment.set("sandbox"); // or "production"
+            window.Paddle.Initialize({
+                token: process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN,
+                eventCallback: (data) => {
+                    console.log("Paddle event:", data);
+                },
             });
+            setReady(true);
         }
     }, []);
 
-    const openCheckout = async () => {
-        if (!apiService.isAuthenticated()) {
-            alert("Not Authenticated");
-            return;
-        }
+    if (!decoded) {
+        return <p className="p-6">You must be logged in to subscribe.</p>;
+    }
 
-        const token = apiService.getToken();
+    const handleCheckout = () => {
+        if (!window?.Paddle || !ready) return alert("Checkout not ready");
 
-        let userId = null;
-        let userEmail = null;
+        const payload = {
+            items: [
+                {
+                    priceId: PRODUCTS.starter_monthly,
+                    quantity: 1,
+                    custom_data: {
+                        subscriptionTypeName: "starter",
+                        subscriptionPeriod: "monthly",
+                        amountPaid: 3.99,
+                        userId: decoded.sub, // Supabase user ID
+                    },
+                },
+            ],
+        };
 
-        try {
-            const decoded = jwtDecode(token);
-            userId = decoded.id || decoded.sub || decoded.user_id;
-            userEmail = decoded.email || decoded.user_email;
+        console.log("🔍 Checkout Payload", payload);
 
-            if (!userId || !userEmail) {
-                throw new Error("Couldn’t extract user data from token");
-            }
-        } catch (err) {
-            console.error("❌ Failed to decode token", err);
-            return alert("Authentication error. Please log in again.");
-        }
+        if (!window?.Paddle) return alert("Paddle not ready");
 
-        const subscriptionTypeName = "starter";
-        const subscriptionPeriod = "monthly";
-        const amountPaid = 3.99;
-
-        window.Paddle.Checkout.open({
-            product: "pro_01k05gqhkkc3wmb3ww6bfhd0t0", // Your Paddle Product ID
-            email: userEmail,
-            passthrough: JSON.stringify({
-                userId,
-                plan: subscriptionTypeName,
-            }),
-            successCallback: async (data) => {
-                console.log("✅ Checkout success!", data);
-
-                try {
-                    const res = await fetch("/api/paddle/success", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${token}`,
-                        },
-                        body: JSON.stringify({
-                            paddlePaymentId: data.checkout.id, // May vary
-                            subscriptionTypeName,
-                            subscriptionPeriod,
-                            amountPaid,
-                        }),
-                    });
-
-                    const result = await res.json();
-
-                    if (result.status === "success") {
-                        alert("🎉 Subscription activated!");
-                        window.location.reload();
-                    } else {
-                        alert("❌ Something went wrong: " + result.msg);
-                    }
-                } catch (error) {
-                    console.error("❌ Server error:", error);
-                    alert("Something went wrong. Please try again.");
-                }
-            },
-        });
+        window.Paddle.Checkout.open(payload);
     };
 
     return (
-        <main className="p-6">
-            <h1 className="text-3xl font-bold mb-4">Subscribe to PrepPal</h1>
-            <button
-                onClick={openCheckout}
-                className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700"
-            >
-                Subscribe - Starter
-            </button>
-        </main>
+        <div className="flex flex-row items-center justify-around p-4 m-4">
+            <div className="flex flex-col gap-2">
+                <h3>
+                    <code>Starter Monthly ($3.99)</code>
+                </h3>
+                <button
+                    className="bg-emerald-800 text-emerald-100 w-30 h-15 rounded-[8px]"
+                    onClick={handleCheckout}
+                >
+                    Subscribe – Starter Monthly ($3.99)
+                </button>
+            </div>
+        </div>
     );
 }

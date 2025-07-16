@@ -3,7 +3,7 @@ import "./globals.css";
 import Footer from "./components/footer";
 import NavbarWrapper from "./components/NavbarWrapper";
 import { Toaster } from "sonner";
-import Script from "next/script";
+
 import PaddleScript from "./components/PaddleScript";
 
 const geistSans = Geist({
@@ -51,7 +51,11 @@ export default function RootLayout({ children }) {
                     content="width=device-width, initial-scale=1.0"
                 />
                 <link rel="icon" href="/favicon.png" type="image/png" />
-                <link rel="shortcut icon" href="/favicon.png" type="image/png" />
+                <link
+                    rel="shortcut icon"
+                    href="/favicon.png"
+                    type="image/png"
+                />
 
                 <title>PrepPal - Your Smart Study Companion</title>
                 <meta
