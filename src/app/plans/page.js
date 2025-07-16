@@ -11,13 +11,6 @@ const products = {
 };
 
 export default function PlansPage() {
-    Paddle.Environment.set("sandbox");
-    Paddle.Initialize({
-        token: process.env.NEXT_PUBLIC_,
-        eventCallback: function (data) {
-            console.log(data);
-        },
-    });
     function openCheckout(items, customer) {
         Paddle.Checkout.open({
             items: items,

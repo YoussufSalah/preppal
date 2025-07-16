@@ -5,13 +5,16 @@ import Script from "next/script";
 export default function PaddleScript() {
     return (
         <Script
-            src="https://cdn.paddle.com/paddle/paddle.js"
+            src="https://cdn.paddle.com/paddle/v2/paddle.js"
             strategy="beforeInteractive"
             onLoad={() => {
                 if (typeof window !== "undefined" && window.Paddle) {
-                    window.Paddle.Setup({
-                        vendor: 34469,
-                        sandbox: true, // keep true for sandbox, false for production
+                    window.Paddle.Environment.set("sandbox");
+                    window.Paddle.Initialize({
+                        token: process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN,
+                        eventCallback: function (data) {
+                            console.log(data);
+                        },
                     });
                 }
             }}
