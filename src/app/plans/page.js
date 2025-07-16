@@ -55,13 +55,13 @@ export default function PlansPage() {
                     quantity: 1,
                 },
             ],
-            customer: {
-                email: decoded.email,
-                name: decoded.user_metadata?.username ?? "Anonymous",
-                metadata: {
-                    user_id: decoded.sub,
-                },
-            },
+            // customer: {
+            //     email: decoded.email,
+            //     name: decoded.user_metadata?.username ?? "Anonymous",
+            //     metadata: {
+            //         user_id: decoded.sub,
+            //     },
+            // },
         };
 
         console.log("🔍 Checkout Payload", payload);
