@@ -1,35 +1,43 @@
 "use client";
-
+import { useEffect, useState } from "react";
 import { apiService } from "@/utils/APIService";
 import { jwtDecode } from "jwt-decode";
 
 const PRODUCTS = {
     starter_monthly: "pri_01k05grsa4vqw35evbbj16scvb",
-    starter_annually: "pri_01k05gx1bbtpna0kjzh92jvmf2",
-    pro_monthly: "pri_01k05gyeyf1wqt7we25jygtre7",
-    pro_annually: "pri_01k05gza58cn1s9rx9rqaxvpk3",
 };
 
 export default function PlansPage() {
-    if (!apiService.isAuthenticated()) return;
-
+    const [ready, setReady] = useState(false);
     const token = apiService.getToken();
-    const decoded = jwtDecode(token);
+    const decoded = token ? jwtDecode(token) : null;
+
+    useEffect(() => {
+        if (typeof window !== "undefined" && window.Paddle) {
+            window.Paddle.Environment.set("sandbox"); // or "production"
+            window.Paddle.Initialize({
+                token: process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN,
+                eventCallback: (data) => {
+                    console.log("Paddle event:", data);
+                },
+            });
+            setReady(true);
+        }
+    }, []);
+
+    if (!decoded) {
+        return <p className="p-6">You must be logged in to subscribe.</p>;
+    }
 
     const handleCheckout = () => {
-        if (!window?.Paddle) return alert("Paddle not ready");
+        if (!window?.Paddle || !ready) return alert("Checkout not ready");
 
         window.Paddle.Checkout.open({
-            items: [
-                {
-                    priceId: PRODUCTS.starter_monthly,
-                    quantity: 1,
-                },
-            ],
+            items: [{ priceId: PRODUCTS.starter_monthly, quantity: 1 }],
             customer: {
                 email: decoded.email,
-                name: `${decoded.first_name || ""} ${
-                    decoded.last_name || ""
+                name: `${decoded.first_name ?? ""} ${
+                    decoded.last_name ?? ""
                 }`.trim(),
                 metadata: {
                     user_id: decoded.id,
