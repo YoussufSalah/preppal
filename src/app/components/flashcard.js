@@ -9,38 +9,9 @@ const ModernFlashcards = ({ flashcardData = null, isLoading = false }) => {
   const [dragOffset, setDragOffset] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
 
-  // Default sample data if no flashcardData provided
-  const defaultData = {
-    count: 6,
-    cards: [
-      {
-        front: "What is supervised learning?",
-        back: "A type of machine learning where algorithms learn from labeled training data to make predictions or decisions on new, unseen data."
-      },
-      {
-        front: "What is the difference between classification and regression?",
-        back: "Classification predicts discrete categories or classes, while regression predicts continuous numerical values."
-      },
-      {
-        front: "What is overfitting?",
-        back: "When a model learns the training data too well, including noise and outliers, leading to poor performance on new data."
-      },
-      {
-        front: "What is cross-validation?",
-        back: "A technique to evaluate model performance by splitting data into multiple folds and training/testing on different combinations."
-      },
-      {
-        front: "What is feature engineering?",
-        back: "The process of selecting, modifying, or creating new features from raw data to improve model performance."
-      },
-      {
-        front: "What is the bias-variance tradeoff?",
-        back: "The balance between a model's ability to minimize bias (underfitting) and variance (overfitting) to achieve optimal performance."
-      }
-    ]
-  };
+ 
 
-  const currentFlashcardData = flashcardData || defaultData;
+  const currentFlashcardData = flashcardData ;
 
   // Show loading state
   if (isLoading) {
@@ -59,7 +30,7 @@ const ModernFlashcards = ({ flashcardData = null, isLoading = false }) => {
   }
 
   // Show message if no flashcards available
-  if (!currentFlashcardData.cards || currentFlashcardData.cards.length === 0) {
+  if (!currentFlashcardData.cards || currentFlashcardData.cards.length === 0 || !flashcardData) {
     return (
       <div className="w-full min-w-0 bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 lg:p-8 shadow-lg">
         <div className="flex items-center justify-center h-64 sm:h-80">
