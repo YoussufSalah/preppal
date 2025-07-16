@@ -4,7 +4,7 @@ import { apiService } from "@/utils/APIService";
 import { jwtDecode } from "jwt-decode";
 
 const PRODUCTS = {
-    starter_monthly: "pri_01k05grsa4vqw35evbbj16scvb",
+    starter_monthly: "01k05grsa4vqw35evbbj16scvb",
 };
 
 export default function PlansPage() {
