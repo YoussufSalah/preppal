@@ -17,12 +17,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-    metadataBase: new URL("https://Prep-Pal.vercel.app"),
+    metadataBase: new URL("https://www.preppal-ai.xyz"),
     title: "PrepPal - Your Smart Study Companion",
     description:
         "PrepPal summarizes your PDFs, highlights key points, and generates quizzes to help you learn smarter and faster.",
     icons: {
-        icon: "/preppal-icon.png",
+        icon: "/favicon.png",
     },
     openGraph: {
         title: "PrepPal - Your Smart Study Companion",
@@ -50,7 +50,9 @@ export default function RootLayout({ children }) {
                     name="viewport"
                     content="width=device-width, initial-scale=1.0"
                 />
-                <link rel="icon" href="/preppal-icon.png" />
+                <link rel="icon" href="/favicon.png" type="image/png" />
+                <link rel="shortcut icon" href="/favicon.png" type="image/png" />
+
                 <title>PrepPal - Your Smart Study Companion</title>
                 <meta
                     name="description"
