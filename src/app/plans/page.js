@@ -38,15 +38,14 @@ export default function PlansPage() {
                 {
                     priceId: PRODUCTS.starter_monthly,
                     quantity: 1,
+                    custom_data: {
+                        subscriptionTypeName: "starter",
+                        subscriptionPeriod: "monthly",
+                        amountPaid: 3.99,
+                        userId: decoded.sub, // Supabase user ID
+                    },
                 },
             ],
-            // customer: {
-            //     email: decoded.email,
-            //     name: decoded.user_metadata?.username ?? "Anonymous",
-            //     metadata: {
-            //         user_id: decoded.sub,
-            //     },
-            // },
         };
 
         console.log("🔍 Checkout Payload", payload);
