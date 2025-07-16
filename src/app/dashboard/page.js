@@ -2,14 +2,19 @@
 import React, { useEffect, useState } from 'react';
 import { User, Calendar, Trophy, TrendingUp, FileText, Brain, Zap, Target, Award, Star, Flame, BookOpen, Clock, BarChart3 } from 'lucide-react';
 import { getCurrentUser, signOut } from "../../utils/auth.js";
+import { apiService } from '@/utils/APIService.js';
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [email, setEmail] = useState('')
   const [username, setUsername] = useState('');
   const [joinDate, setJoinDate] = useState('');
+  const [TotalSummaryCount, setTotalSummaryCount] = useState(0);
 
+const accessToken =
+        typeof window !== "undefined"
+            ? localStorage.getItem("accessToken")
+            : null;
 
-  
   useEffect(() => {
     async function loadUser() {
         try{
@@ -35,6 +40,21 @@ const Dashboard = () => {
         }
     }
     loadUser();
+  }, []);
+
+  useEffect(() =>{
+    const fetchSummaryCount = async () => {
+      if (!accessToken) return;
+
+      try{
+        const summaries = await apiService.getAllSummaries(accessToken);
+        setTotalSummaryCount(summaries.length); // counts the total summaries
+      } catch (err) {
+        console.error("Failed to fetch summaries:", err);
+      }
+    };
+
+    fetchSummaryCount();
   }, []);
   // Mock user data
   const userData = {
@@ -143,7 +163,7 @@ const Dashboard = () => {
           <StatCard 
             icon={FileText} 
             title="Total Summaries" 
-            value={userData.totalSummaries} 
+            value={{TotalSummaryCount}} 
             subtitle="This month: 12"
             color="bg-blue-500" 
           />
