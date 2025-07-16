@@ -7,7 +7,7 @@ export default function CTASection(){
         router.push("/upload");
         }, [router]);
     return(
-        <section className="relative py-20 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 overflow-hidden">
+        <section className="relative py-20 bg-blue-600 overflow-hidden">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl font-bold text-white mb-6">
             Ready to revolutionize your studying?

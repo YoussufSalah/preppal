@@ -309,7 +309,7 @@ const PricingPage = () => {
       </div>
 
       {/* CTA Section */}
-      <div className="relative py-20 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 overflow-hidden">
+      <div className="relative py-20 bg-blue-600 overflow-hidden">
         <div className="absolute inset-0">
           <div className="absolute top-10 right-10 w-40 h-40 bg-white opacity-10 rounded-full"></div>
           <div className="absolute bottom-20 left-10 w-32 h-32 bg-white opacity-5 rounded-full"></div>
