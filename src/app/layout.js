@@ -4,7 +4,7 @@ import Footer from "./components/footer";
 import NavbarWrapper from "./components/NavbarWrapper";
 import { Toaster } from "sonner";
 
-import PaddleScript from "../components/PaddleScript";
+import PaddleScript from "./components/PaddleScript";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
