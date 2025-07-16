@@ -48,21 +48,27 @@ export default function PlansPage() {
             },
         });
 
-        window.Paddle.Checkout.open({
+        const payload = {
             items: [
                 {
                     priceId: PRODUCTS.starter_monthly,
                     quantity: 1,
                 },
             ],
-            // customer: {
-            //     email: decoded.email,
-            //     name: decoded.user_metadata?.username ?? "Anonymous",
-            //     metadata: {
-            //         user_id: decoded.sub,
-            //     },
-            // },
-        });
+            customer: {
+                email: decoded.email,
+                name: decoded.user_metadata?.username ?? "Anonymous",
+                metadata: {
+                    user_id: decoded.sub,
+                },
+            },
+        };
+
+        console.log("🔍 Checkout Payload", payload);
+
+        if (!window?.Paddle) return alert("Paddle not ready");
+
+        window.Paddle.Checkout.open(payload);
     };
 
     return (
