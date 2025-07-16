@@ -163,7 +163,7 @@ const accessToken =
           <StatCard 
             icon={FileText} 
             title="Total Summaries" 
-            value={{TotalSummaryCount}} 
+            value={TotalSummaryCount} 
             subtitle="This month: 12"
             color="bg-blue-500" 
           />
