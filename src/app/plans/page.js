@@ -9,7 +9,7 @@ const products = {
 
 export default function PlansPage() {
     function openCheckout(items, customer) {
-        Paddle.Checkout.open({
+        window.Paddle.Checkout.open({
             items: items,
             customer: customer,
         });
