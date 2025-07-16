@@ -4,6 +4,8 @@ import Footer from "./components/footer";
 import NavbarWrapper from "./components/NavbarWrapper";
 import { Toaster } from "sonner";
 
+import PaddleScript from "../components/PaddleScript";
+
 const geistSans = Geist({
     variable: "--font-geist-sans",
     subsets: ["latin"],
@@ -85,6 +87,7 @@ export default function RootLayout({ children }) {
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
                 <NavbarWrapper />
+                <PaddleScript />
                 <Toaster richColors position="top-right" />
                 {children}
                 <Footer />
