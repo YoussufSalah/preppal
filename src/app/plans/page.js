@@ -4,7 +4,7 @@ import { apiService } from "@/utils/APIService";
 import { jwtDecode } from "jwt-decode";
 
 const PRODUCTS = {
-    starter_monthly: "01k05grsa4vqw35evbbj16scvb",
+    starter_monthly: "pri_01k05grsa4vqw35evbbj16scvb",
 };
 
 export default function PlansPage() {
@@ -14,6 +14,7 @@ export default function PlansPage() {
 
     useEffect(() => {
         if (typeof window !== "undefined" && window.Paddle) {
+            console.log("useEffect, Initialized Paddle: ", window.Paddle);
             window.Paddle.Environment.set("sandbox"); // or "production"
             window.Paddle.Initialize({
                 token: process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN,
@@ -31,22 +32,6 @@ export default function PlansPage() {
 
     const handleCheckout = () => {
         if (!window?.Paddle || !ready) return alert("Checkout not ready");
-
-        console.log({
-            items: [
-                {
-                    priceId: PRODUCTS.starter_monthly,
-                    quantity: 1,
-                },
-            ],
-            customer: {
-                email: decoded.email,
-                name: decoded.user_metadata?.username ?? "Anonymous",
-                metadata: {
-                    user_id: decoded.sub,
-                },
-            },
-        });
 
         const payload = {
             items: [

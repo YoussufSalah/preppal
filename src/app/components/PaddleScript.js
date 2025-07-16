@@ -8,8 +8,12 @@ export default function PaddleScript() {
             strategy="beforeInteractive"
             onLoad={() => {
                 if (typeof window !== "undefined" && window.Paddle) {
-                    window.Paddle.Environment.set("sandbox");
-                    window.Paddle.Initialize({
+                    console.log(
+                        "PaddleScript, Initialized Paddle: ",
+                        window.Paddle
+                    );
+                    window.Paddle?.Environment.set("sandbox");
+                    window.Paddle?.Initialize({
                         token: process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN,
                         eventCallback: function (data) {
                             console.log(data);
