@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, use } from "react";
 import {
     Upload,
     FileText,
@@ -23,6 +23,7 @@ import BetaNotice from "../components/betaNotice";
 import ReactMarkdown from "react-markdown";
 
 
+
 const PDFUploadPage = () => {
     const [uploadedFile, setUploadedFile] = useState(null);
     const [selectedOptions, setSelectedOptions] = useState([]);
@@ -34,6 +35,7 @@ const PDFUploadPage = () => {
     const [flashcardData, setFlashcardData] = useState(null);
     const [isGeneratingFlashcards, setIsGeneratingFlashcards] = useState(false);
     const [isDragOver, setIsDragOver] = useState(false);
+    const [studySeconds, setStudySeconds] = useState(0);
 
     const router = useRouter();
     const fileInputRef = useRef(null);
@@ -45,6 +47,48 @@ const PDFUploadPage = () => {
     useEffect(() => {
         if (!accessToken) router.push("/login");
     }, [router, accessToken]);
+
+    useEffect(() => {
+        const sendStudyTime = () => {
+            if (studySeconds > 10) {
+                apiService.sendStudyTime(studySeconds, accessToken)
+                .then(() => 
+                console.log(' study time sent to backend :', studySeconds))
+                .catch((err) => 
+                console.error('❌ failed to send study time:', err));
+            }
+        };
+
+        return () => sendStudyTime();
+    }, [studySeconds]);
+
+    //Tad close / reload
+
+    useEffect(() => {
+        const handleBeforeUnload = () => {
+            if (studySeconds > 10 ) {
+                const blob = new blob(
+                    [
+                        JSON.stringify({
+                            seconds:studySeconds,
+                        }),
+                    ],
+                    { type: "application/json" }
+                );
+                navigator.sendBeacon(
+                    `${process.env.NEXT_PUBLIC_API_BASE_URL}/users/add-study-time`,
+                    blob
+                );
+            }
+        };
+
+        window.addEventListener("beforeunload", handleBeforeUnload);
+        return () => 
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+    }, [studySeconds]);
+
+
+   
     const generationOptions = [
         {
             id: "summary",

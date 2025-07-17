@@ -15,7 +15,6 @@ const LoginContent = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const redirectTo = searchParams.get("redirectTo") || "/upload";
-
     const [isMounted, setIsMounted] = useState(false);
     const [isLogin, setIsLogin] = useState(true);
     const [showPassword, setShowPassword] = useState(false);
@@ -182,32 +181,6 @@ const LoginContent = () => {
             setIsLoading(false);
         }
     };
-
-    const testAPIConnection = async () => {
-        try {
-            console.log("Testing API connection...");
-            const result = await apiService.testConnection();
-            console.log("API test result:", result);
-
-            const resultsText = Object.entries(result.results)
-                .map(([key, value]) => {
-                    if (value.error) {
-                        return `${key}: Error - ${value.error}`;
-                    } else {
-                        return `${key}: ${value.status} ${value.statusText}`;
-                    }
-                })
-                .join("\n");
-
-            alert(
-                `API Test Results:\nBase URL: ${result.baseURL}\n\n${resultsText}`
-            );
-        } catch (error) {
-            console.error("API test failed:", error);
-            alert(`API Test Failed: ${error.message}`);
-        }
-    };
-
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 flex items-center justify-center p-4">
             <div className="w-full max-w-md mx-auto">
@@ -216,19 +189,9 @@ const LoginContent = () => {
                     <div className="flex items-center justify-center space-x-2 mb-4">
                         <Brain className="w-10 h-10 text-blue-600" />
                         <span className="text-2xl font-bold text-gray-900">
-                            StudyAI
+                            PrepPal
                         </span>
                     </div>
-                    <p className="text-gray-600">
-                        Transform your PDFs into study materials
-                    </p>
-                    <button
-                        type="button"
-                        onClick={testAPIConnection}
-                        className="mt-4 text-xs text-blue-600 hover:text-blue-700 underline"
-                    >
-                        Test API Connection
-                    </button>
                 </div>
 
                 <div className="bg-white rounded-2xl shadow-xl p-8">

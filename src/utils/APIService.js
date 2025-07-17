@@ -237,6 +237,15 @@ class APIService {
         });
     }
 
+    async getStudyTime(token) {
+        return await this.makeRequest("/users/study-time", {
+            method: "GET",
+            headers: {
+            Authorization: `Bearer ${token}`,
+                },
+            });
+        }
+
     // Upload Methods
     async uploadPDF(file, token) {
         const formData = new FormData();
@@ -263,6 +272,8 @@ class APIService {
     }
 
     async getAllSummaries(token) {
+        console.log("🔁 Hitting /summarize with token:", token);
+
         return this.makeRequest("/summarize/", {
             method: "GET",
             headers: {
@@ -282,6 +293,8 @@ class APIService {
     }
 
     async getAllFlashcards(token) {
+         console.log("🔁 Hitting /flashcard with token:", token);
+
         return this.makeRequest("/flashcards/", {
             method: "GET",
             headers: {
@@ -308,6 +321,17 @@ class APIService {
             },
         });
     }
+
+      async addStudyTime(seconds, token) {
+    return await this.makeRequest("/users/add-study-time", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ seconds }),
+    });
+  }
 
     // Utility Methods
     getToken() {
