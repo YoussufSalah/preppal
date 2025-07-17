@@ -12,6 +12,7 @@ const Dashboard = () => {
   const [totalSummaryCount, setTotalSummaryCount] = useState(0);
   const [totalFlashcardCount, setTotalFlashcardCount] = useState(0);
   const [totalQuizCount, setTotalQuizCount] = useState(0);
+  const [studyHours, setStudyHours] = useState(null);
 
 const accessToken =
         typeof window !== "undefined"
@@ -113,6 +114,23 @@ useEffect(() => {
   fetchQuizs();
 },[]);
 
+  useEffect(() => {
+    const fetchStudyTime = async () => {
+      try {
+        const res = await apiService.getStudyTime(accessToken);
+
+        const totalSeconds = res?.data?.study_seconds || 0;
+        const totalHours = totalSeconds / 3600;
+
+        setStudyHours(totalHours.toFixed(2)); // round to 2 decimal places
+      } catch (error) {
+        console.error("❌ Failed to fetch study time:", error);
+      }
+    };
+
+    fetchStudyTime();
+  }, []);
+ 
   // Mock user data
   const userData = {
     name: "john",
