@@ -35,7 +35,7 @@ const PDFUploadPage = () => {
     const [flashcardData, setFlashcardData] = useState(null);
     const [isGeneratingFlashcards, setIsGeneratingFlashcards] = useState(false);
     const [isDragOver, setIsDragOver] = useState(false);
-    const [studySeconds, setStudySeconds] = useState(0);
+   
 
     const router = useRouter();
     const fileInputRef = useRef(null);

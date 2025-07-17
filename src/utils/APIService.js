@@ -237,15 +237,6 @@ class APIService {
         });
     }
 
-    async getStudyTime(token) {
-        return await this.makeRequest("/users/study-time", {
-            method: "GET",
-            headers: {
-            Authorization: `Bearer ${token}`,
-                },
-            });
-        }
-
     // Upload Methods
     async uploadPDF(file, token) {
         const formData = new FormData();
@@ -272,8 +263,6 @@ class APIService {
     }
 
     async getAllSummaries(token) {
-        console.log("🔁 Hitting /summarize with token:", token);
-
         return this.makeRequest("/summarize/", {
             method: "GET",
             headers: {
@@ -293,8 +282,6 @@ class APIService {
     }
 
     async getAllFlashcards(token) {
-         console.log("🔁 Hitting /flashcard with token:", token);
-
         return this.makeRequest("/flashcards/", {
             method: "GET",
             headers: {
@@ -341,6 +328,15 @@ async getStudyTime(token) {
             Authorization: `Bearer ${token}`,
         },
     });
+}
+
+async getUserStats(token) {
+  return this.makeRequest("/users/me/stats", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 }
 
     // Utility Methods

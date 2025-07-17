@@ -1,13 +1,13 @@
 'use client'
 import React, { useEffect, useState } from 'react';
 import { User, Calendar, Trophy, TrendingUp, FileText, Brain, Zap, Target, Award, Star, Flame, BookOpen, Clock, BarChart3 } from 'lucide-react';
-import { getCurrentUser, signOut } from "../../utils/auth.js";
+import { getCurrentUser, signOut, } from "../../utils/auth.js";
 import { apiService } from '@/utils/APIService.js';
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
-  const [email, setEmail] = useState('')
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [username, setUsername] =  useState('');
   const [joinDate, setJoinDate] = useState('');
   const [totalSummaryCount, setTotalSummaryCount] = useState(0);
   const [totalFlashcardCount, setTotalFlashcardCount] = useState(0);
@@ -15,118 +15,76 @@ const Dashboard = () => {
   const [studyTime, setStudyTime] = useState(0);
 
 const accessToken =
-        typeof window !== "undefined"
-            ? localStorage.getItem("accessToken")
-            : null;
+  typeof window !== "undefined"
+    ? localStorage.getItem("accessToken")
+    : null;
 
-  useEffect(() => {
-    async function loadUser() {
-        try{
-            const user = await getCurrentUser();
-            console.log("Loaded user:", user);
-            if(user) {
-                setEmail(user.email);
-                setUsername(user.username );
-
-                 // Format join date (e.g. July 7, 2025)
-        const formatted = new Date(user.created_at).toLocaleDateString("en-US", {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        });
-            setJoinDate(formatted);
-            } else {
-                setEmail('youremail@preppal.com');
-                setUsername('YourUsername');
-            }
-        } catch (err) {
-            console.log('Error fetching user:', err);
-        }
-    }
-    loadUser();
-  }, []);
-
-  useEffect(() =>{
-    const fetchSummaryCount = async () => {
-      console.log("Attemping to fetch summaries...");
-
-      if (!accessToken) {
-        console.log("⚠️ No access token found.");
-        return;
-      }
-      try{
-        const summaries = await apiService.getAllSummaries(accessToken);
-        console.log("✅ API Response:", summaries);
-
-        const pdfSummaries = summaries.data.PDFSummaries;
-        console.log("📄 PDF Summaries:", pdfSummaries);
-      
-        setTotalSummaryCount(pdfSummaries.length); // counts the total summaries
-      } catch (err) {
-        console.error("Failed to fetch summaries:", err);
-      }
-    };
-
-    fetchSummaryCount();
-  }, []);
-  
-  useEffect(() => {
-  const fetchFlashcards = async () => {
-    if (!accessToken){
-      console.log("⚠️ No access token found.");
-      return;
-    };
-
+useEffect(() => {
+  const fetchStatsAndUser = async () => {
     try {
-      const response = await apiService.getAllFlashcards(accessToken);
-      console.log('📦 Flashcards:', response);
+      const res = await apiService.getUserStats(accessToken);
+      console.log("📊 Stats fetched:", res);
 
-      const pdfFlashcards = response.data?.PDFFlashcards || [];
-      console.log("📄 PDF Flashcard:", pdfFlashcards);
+      const stats = res?.data?.stats;
 
-      setTotalFlashcardCount(pdfFlashcards.length); 
+      if (stats) {
+        setEmail(stats.email || "youremail@preppal.com");
+        setUsername(stats.username || "YourUsername");
 
-    } catch (error) {
-      console.log("❌ Failed to fetch the flashcards:", error);
+        const formattedDate = new Date(stats.joinedAt).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+        setJoinDate(formattedDate);
+
+        setStudyTime(stats.totalStudyTime || 0);
+      }
+    } catch (err) {
+      console.log("❌ Failed to fetch stats:", err);
+      setEmail("youremail@preppal.com");
+      setUsername("YourUsername");
     }
   };
 
-  fetchFlashcards();
+  fetchStatsAndUser();
 }, []);
 
+
 useEffect(() => {
-  const fetchQuizs = async () => {
-    if (!accessToken) return;
+  const fetchStats = async () => {
+    if (!accessToken) {
+      console.log("⚠️ No access token found.");
+      return;
+    }
 
     try {
-      const response = await apiService.getAllQuizzes(accessToken);
-      console.log(' ❓Quiz:', response);
+      const res = await apiService.getUserStats(accessToken);
+      console.log("📊 Full Stats fetched:", res);
 
-      const pdfQUizzes = response.data?.PDFQuizzes || [];
-      console.log("❔PDF QUiz:", pdfQUizzes);
+      const stats = res?.data?.stats;
+      const usage = stats?.usage;
 
-      setTotalQuizCount(pdfQUizzes.length);
+      if (usage) {
+        setTotalSummaryCount(usage.summariesGenerated || 0);
+        setTotalFlashcardCount(usage.flashcardsCreated || 0);
+        setTotalQuizCount(usage.quizzesTaken || 0);
 
+        console.log("📄 Summary count:", usage.summariesGenerated);
+        console.log("🧠 Flashcard count:", usage.flashcardsCreated);
+        console.log("❓ Quiz count:", usage.quizzesTaken);
+      }
     } catch (error) {
-      console.log("❌ Failed to fetch the Quizs:", error);
+      console.error("❌ Failed to fetch usage stats:", error);
     }
   };
-  fetchQuizs();
-},[]);
 
-useEffect(() => {
-        const fetchStudyTime = async () => {
-            const token = await getUserTokens();
-            const res = await apiService.getStudyTime(token);
-            setStudyTime(res?.data?.study_time || 0);
-        };
+  fetchStats();
+}, []);
 
-        fetchStudyTime();
-    }, []);
 
-    const hours = Math.floor(studyTime / 60);
-    const minutes = studyTime % 60; 
- 
+const hours = Math.floor(studyTime / 60);
+const minutes = studyTime % 60;
   // Mock user data
   const userData = {
     name: "john",
@@ -207,7 +165,7 @@ useEffect(() => {
                 {username ? username.split(' ').map(n => n.charAt(0).toUpperCase()).join('') : 'U'}
               </span>
             </div>
-            <div className="flex-1 text-center sm:text-left">
+            <div className="flex-1 text-center sm:text-left ml-2">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900 break-words">{username}</h2>
               <p className="text-gray-600 text-sm sm:text-base break-all">{email}</p>
               <p className="text-xs sm:text-sm text-gray-500 mt-1">Member since {joinDate}</p>
