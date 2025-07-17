@@ -8,7 +8,7 @@ const Dashboard = () => {
   const [email, setEmail] = useState('')
   const [username, setUsername] = useState('');
   const [joinDate, setJoinDate] = useState('');
-  const [TotalSummaryCount, setTotalSummaryCount] = useState(0);
+  const [totalSummaryCount, setTotalSummaryCount] = useState(0);
 
 const accessToken =
         typeof window !== "undefined"
@@ -48,8 +48,9 @@ const accessToken =
 
       try{
         const summaries = await apiService.getAllSummaries(accessToken);
-        console.log("Fetched summaries:", summaries);
-        setTotalSummaryCount(summaries.length); // counts the total summaries
+        const PDFSummaries = summaries.data.PDFSummaries;
+        console.log("PDF Summary:", PDFSummaries)
+        setTotalSummaryCount(PDFSummaries.length); // counts the total summaries
       } catch (err) {
         console.error("Failed to fetch summaries:", err);
       }
@@ -164,7 +165,7 @@ const accessToken =
           <StatCard 
             icon={FileText} 
             title="Total Summaries" 
-            value={TotalSummaryCount} 
+            value={totalSummaryCount} 
             subtitle="This month: 12"
             color="bg-blue-500" 
           />
