@@ -263,6 +263,8 @@ class APIService {
     }
 
     async getAllSummaries(token) {
+        console.log("🔁 Hitting /summarize with token:", token);
+        
         return this.makeRequest("/summarize/", {
             method: "GET",
             headers: {

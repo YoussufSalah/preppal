@@ -44,12 +44,19 @@ const accessToken =
 
   useEffect(() =>{
     const fetchSummaryCount = async () => {
-      if (!accessToken) return;
+      console.log("Attemping to fetch summaries...");
 
+      if (!accessToken) {
+        console.log("⚠️ No access token found.");
+        return;
+      }
       try{
         const summaries = await apiService.getAllSummaries(accessToken);
+        console.log("✅ API Response:", summaries);
+
         const PDFSummaries = summaries.data.PDFSummaries;
-        console.log("PDF Summary:", PDFSummaries)
+        console.log("📄 PDF Summaries:", PDFSummaries);
+      
         setTotalSummaryCount(PDFSummaries.length); // counts the total summaries
       } catch (err) {
         console.error("Failed to fetch summaries:", err);
