@@ -10,6 +10,7 @@ const Dashboard = () => {
   const [username, setUsername] = useState('');
   const [joinDate, setJoinDate] = useState('');
   const [totalSummaryCount, setTotalSummaryCount] = useState(0);
+  const [totalFlashcardCount, setTotalFlashcardCount] = useState(0);
 
 const accessToken =
         typeof window !== "undefined"
@@ -66,6 +67,25 @@ const accessToken =
 
     fetchSummaryCount();
   }, []);
+  
+  useEffect(() => {
+  const fetchFlashcards = async () => {
+    if (!accessToken) return;
+
+    try {
+      const response = await apiService.getAllFlashcards(accessToken);
+      console.log('📦 Flashcards:', response);
+      const pdfFlashcards = response.data?.pdfFlashcards || [];
+      setTotalFlashcardCount(pdfFlashcards.length); 
+
+    } catch (error) {
+      console.log("❌ Failed to fetch the flashcards:", error);
+    }
+  };
+
+  fetchFlashcards();
+}, []);
+
   // Mock user data
   const userData = {
     name: "john",
@@ -184,7 +204,7 @@ const accessToken =
           <StatCard 
             icon={Zap} 
             title="Flashcards Created" 
-            value={userData.totalFlashcards} 
+            value={totalFlashcardCount} 
             subtitle="Across 8 subjects"
             color="bg-purple-500" 
           />
