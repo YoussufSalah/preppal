@@ -11,6 +11,7 @@ const Dashboard = () => {
   const [joinDate, setJoinDate] = useState('');
   const [totalSummaryCount, setTotalSummaryCount] = useState(0);
   const [totalFlashcardCount, setTotalFlashcardCount] = useState(0);
+  const [totalQuizCount, setTotalQuizCount] = useState(0);
 
 const accessToken =
         typeof window !== "undefined"
@@ -56,10 +57,10 @@ const accessToken =
         const summaries = await apiService.getAllSummaries(accessToken);
         console.log("✅ API Response:", summaries);
 
-        const PDFSummaries = summaries.data.PDFSummaries;
-        console.log("📄 PDF Summaries:", PDFSummaries);
+        const pdfSummaries = summaries.data.PDFSummaries;
+        console.log("📄 PDF Summaries:", pdfSummaries);
       
-        setTotalSummaryCount(PDFSummaries.length); // counts the total summaries
+        setTotalSummaryCount(pdfSummaries.length); // counts the total summaries
       } catch (err) {
         console.error("Failed to fetch summaries:", err);
       }
@@ -70,12 +71,18 @@ const accessToken =
   
   useEffect(() => {
   const fetchFlashcards = async () => {
-    if (!accessToken) return;
+    if (!accessToken){
+      console.log("⚠️ No access token found.");
+      return;
+    };
 
     try {
       const response = await apiService.getAllFlashcards(accessToken);
       console.log('📦 Flashcards:', response);
-      const pdfFlashcards = response.data?.pdfFlashcards || [];
+
+      const pdfFlashcards = response.data?.PDFFlashcards || [];
+      console.log("📄 PDF Flashcard:", pdfFlashcards);
+
       setTotalFlashcardCount(pdfFlashcards.length); 
 
     } catch (error) {
@@ -85,6 +92,26 @@ const accessToken =
 
   fetchFlashcards();
 }, []);
+
+useEffect(() => {
+  const fetchQuizs = async () => {
+    if (!accessToken) return;
+
+    try {
+      const response = await apiService.getAllQuizzes(accessToken);
+      console.log(' ❓Quiz:', response);
+
+      const pdfQUizzes = response.data?.PDFQuizzes || [];
+      console.log("❔PDF QUiz:", pdfQUizzes);
+
+      setTotalQuizCount(pdfQUizzes.length);
+
+    } catch (error) {
+      console.log("❌ Failed to fetch the Quizs:", error);
+    }
+  };
+  fetchQuizs();
+},[]);
 
   // Mock user data
   const userData = {
@@ -197,7 +224,7 @@ const accessToken =
           <StatCard 
             icon={Brain} 
             title="Quizzes Taken" 
-            value={userData.totalQuizzes} 
+            value={totalQuizCount} 
             subtitle={`${userData.accuracy}% avg score`}
             color="bg-green-500" 
           />
