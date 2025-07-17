@@ -12,7 +12,7 @@ const Dashboard = () => {
   const [totalSummaryCount, setTotalSummaryCount] = useState(0);
   const [totalFlashcardCount, setTotalFlashcardCount] = useState(0);
   const [totalQuizCount, setTotalQuizCount] = useState(0);
-  const [studyHours, setStudyHours] = useState(null);
+  const [studyTime, setStudyTime] = useState(0);
 
 const accessToken =
         typeof window !== "undefined"
@@ -114,31 +114,23 @@ useEffect(() => {
   fetchQuizs();
 },[]);
 
-  useEffect(() => {
-    const fetchStudyTime = async () => {
-      try {
-        const res = await apiService.getStudyTime(accessToken);
+useEffect(() => {
+        const fetchStudyTime = async () => {
+            const token = await getUserTokens();
+            const res = await apiService.getStudyTime(token);
+            setStudyTime(res?.data?.study_time || 0);
+        };
 
-        const totalSeconds = res?.data?.study_seconds || 0;
-        const totalHours = totalSeconds / 3600;
+        fetchStudyTime();
+    }, []);
 
-        setStudyHours(totalHours.toFixed(2)); // round to 2 decimal places
-      } catch (error) {
-        console.error("❌ Failed to fetch study time:", error);
-      }
-    };
-
-    fetchStudyTime();
-  }, []);
+    const hours = Math.floor(studyTime / 60);
+    const minutes = studyTime % 60; 
  
   // Mock user data
   const userData = {
     name: "john",
     streak: 12,
-    totalSummaries: 45,
-    totalQuizzes: 23,
-    totalFlashcards: 167,
-    studyTime: 89,
     accuracy: 87
   };
 
@@ -256,7 +248,7 @@ useEffect(() => {
           <StatCard 
             icon={Clock} 
             title="Study Time" 
-            value={`${userData.studyTime}h`} 
+            value={`${hours ? `${hours}h ` : ""}${minutes}m`}
             subtitle="This month"
             color="bg-orange-500" 
           />

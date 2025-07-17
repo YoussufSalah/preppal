@@ -48,45 +48,20 @@ const PDFUploadPage = () => {
         if (!accessToken) router.push("/login");
     }, [router, accessToken]);
 
-    useEffect(() => {
-        const sendStudyTime = () => {
-            if (studySeconds > 10) {
-                apiService.sendStudyTime(studySeconds, accessToken)
-                .then(() => 
-                console.log(' study time sent to backend :', studySeconds))
-                .catch((err) => 
-                console.error('❌ failed to send study time:', err));
-            }
+   useEffect(() => {
+        let intervalId;
+
+        const startTracking = async () => {
+            const token = await getUserTokens();
+            intervalId = setInterval(() => {
+                apiService.addStudyTime(1, token);
+            }, 60 * 1000); // every 60 seconds
         };
 
-        return () => sendStudyTime();
-    }, [studySeconds]);
+        startTracking();
 
-    //Tad close / reload
-
-    useEffect(() => {
-        const handleBeforeUnload = () => {
-            if (studySeconds > 10 ) {
-                const blob = new blob(
-                    [
-                        JSON.stringify({
-                            seconds:studySeconds,
-                        }),
-                    ],
-                    { type: "application/json" }
-                );
-                navigator.sendBeacon(
-                    `${process.env.NEXT_PUBLIC_API_BASE_URL}/users/add-study-time`,
-                    blob
-                );
-            }
-        };
-
-        window.addEventListener("beforeunload", handleBeforeUnload);
-        return () => 
-            window.removeEventListener("beforeunload", handleBeforeUnload);
-    }, [studySeconds]);
-
+        return () => clearInterval(intervalId); // cleanup when component unmounts
+    }, []);
 
    
     const generationOptions = [

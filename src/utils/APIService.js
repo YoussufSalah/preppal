@@ -322,16 +322,26 @@ class APIService {
         });
     }
 
-      async addStudyTime(seconds, token) {
-    return await this.makeRequest("/users/add-study-time", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ seconds }),
+
+async addStudyTime(minutes, token) {
+    return await this.makeRequest("/users/me/increment-study-time", {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ minutes }),
     });
-  }
+}
+
+async getStudyTime(token) {
+    return await this.makeRequest("/users/me/", {
+        method: "GET",
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+}
 
     // Utility Methods
     getToken() {
