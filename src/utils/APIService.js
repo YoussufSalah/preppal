@@ -309,35 +309,34 @@ class APIService {
         });
     }
 
+    async addStudyTime(minutes, token) {
+        return await this.makeRequest("/users/me/increment-study-time", {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ minutes }),
+        });
+    }
 
-async addStudyTime(minutes, token) {
-    return await this.makeRequest("/users/me/increment-study-time", {
-        method: "PATCH",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ minutes }),
-    });
-}
+    async getStudyTime(token) {
+        return await this.makeRequest("/users/me/", {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+    }
 
-async getStudyTime(token) {
-    return await this.makeRequest("/users/me/", {
-        method: "GET",
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    });
-}
-
-async getUserStats(token) {
-  return this.makeRequest("/users/me/stats", {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-}
+    async getUserStats(token) {
+        return this.makeRequest("/user/me/stats", {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+    }
 
     // Utility Methods
     getToken() {
