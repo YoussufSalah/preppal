@@ -437,19 +437,61 @@ const TermsOfUse = () => {
                                 </div>
                             </div>
                         </section>
-                       <section className="max-w-2xl mx-auto px-4 py-8">
-  <h1 className="text-2xl font-bold mb-4">Refund Policy</h1>
-  <p className="mb-4">
-    We offer a <strong>14-day refund window</strong> for all purchases. Refunds are handled by <strong>Paddle</strong>, our payment provider.
-  </p>
-  <p className="mb-4">
-    Refunds are granted <strong>at Paddle&apos;s sole discretion</strong> and may be <strong>refused</strong> in cases of <strong>fraud, abuse, or manipulative behavior</strong>. Paddle may also <strong>counterclaim</strong> a refund if misuse is detected.
-  </p>
-  <p>
-    For refund requests, please refer to your Paddle receipt or contact us.
-  </p>
-</section>
-
+                        <section className="max-w-2xl mx-auto px-4 py-8">
+                            <h1 className="text-2xl font-bold mb-4">
+                                Refund Policy
+                            </h1>
+                            <p className="mb-4">
+                                We offer a <strong>14-day refund window</strong>{" "}
+                                for all purchases. Refunds are handled by{" "}
+                                <strong>Paddle</strong>, our payment provider.
+                            </p>
+                            <p className="mb-4">
+                                Refunds are issued based on the criteria below.
+                                In cases of suspected{" "}
+                                <strong>fraud, abuse, or misuse</strong>, we
+                                reserve the right to{" "}
+                                <strong>deny a refund request</strong> and
+                                Paddle may counterclaim if abuse is detected.
+                            </p>
+                            <div>
+                                <p>
+                                    <strong>
+                                        We offer refunds in the following cases:
+                                    </strong>
+                                </p>
+                                <ol>
+                                    <li>
+                                        Technical issues that prevent access or
+                                        use of the product, and our support team
+                                        is unable to resolve them within 7 days.
+                                    </li>
+                                    <li>
+                                        Duplicate charges or accidental double
+                                        purchases.
+                                    </li>
+                                    <li>
+                                        Unauthorized purchases reported within
+                                        14 days.
+                                    </li>
+                                    <li>
+                                        Dissatisfaction with the product, within
+                                        7 days of purchase, provided less than
+                                        10% of the included credits/tokens were
+                                        used.
+                                    </li>
+                                </ol>
+                                Refund requests outside of these conditions will
+                                be reviewed on a case-by-case basis. To request
+                                a refund, please contact us at
+                                business.youssuf@gmail.com with your order
+                                details.
+                            </div>
+                            <p>
+                                For refund requests, please refer to your Paddle
+                                receipt or contact us.
+                            </p>
+                        </section>
 
                         <section className="mb-12">
                             <div className="flex items-center mb-6">
