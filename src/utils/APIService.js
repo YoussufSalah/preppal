@@ -313,7 +313,6 @@ class APIService {
         return await this.makeRequest("/user/me/increment-study-time/", {
             method: "PATCH",
             headers: {
-                "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
             },
             body: { minutes },

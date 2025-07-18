@@ -16,13 +16,16 @@ import {
 import { useRouter } from "next/navigation";
 import ProtectedRoute from "../components/ProtectedRoute";
 import { apiService } from "../../utils/APIService.js";
-import { getToken, getUserTokens, signOut, useTokens } from "../../utils/auth.js";
+import {
+    getToken,
+    getUserTokens,
+    signOut,
+    useTokens,
+} from "../../utils/auth.js";
 import ModernFlashcards from "../components/flashcard";
 import QuizResultsSection from "../components/quiz";
 import BetaNotice from "../components/betaNotice";
 import ReactMarkdown from "react-markdown";
-
-
 
 const PDFUploadPage = () => {
     const [uploadedFile, setUploadedFile] = useState(null);
@@ -35,7 +38,6 @@ const PDFUploadPage = () => {
     const [flashcardData, setFlashcardData] = useState(null);
     const [isGeneratingFlashcards, setIsGeneratingFlashcards] = useState(false);
     const [isDragOver, setIsDragOver] = useState(false);
-   
 
     const router = useRouter();
     const fileInputRef = useRef(null);
@@ -48,11 +50,12 @@ const PDFUploadPage = () => {
         if (!accessToken) router.push("/login");
     }, [router, accessToken]);
 
-   useEffect(() => {
+    useEffect(() => {
         let intervalId;
 
         const startTracking = async () => {
             const token = await getUserTokens();
+            console.log(token); // Temp logging for debugging
             intervalId = setInterval(() => {
                 apiService.addStudyTime(1, token);
             }, 60 * 1000); // every 60 seconds
@@ -63,7 +66,6 @@ const PDFUploadPage = () => {
         return () => clearInterval(intervalId); // cleanup when component unmounts
     }, []);
 
-   
     const generationOptions = [
         {
             id: "summary",
@@ -137,7 +139,6 @@ const PDFUploadPage = () => {
         );
     };
 
-
     const uploadPdfToLevi = async (file) => {
         const token = getToken();
         if (!token) {
@@ -160,26 +161,39 @@ const PDFUploadPage = () => {
 
         try {
             if (type === "summary") {
-                const response = await apiService.generatePDFSummary(uploadId, token);
+                const response = await apiService.generatePDFSummary(
+                    uploadId,
+                    token
+                );
                 if (response?.status === "success") {
                     return response.data;
                 } else {
-                    throw new Error(response.message || "Failed to generate summary");
+                    throw new Error(
+                        response.message || "Failed to generate summary"
+                    );
                 }
             }
 
             if (type === "flashcards") {
-                const flashcards = await apiService.generatePDFFlashcards(uploadId, token);
+                const flashcards = await apiService.generatePDFFlashcards(
+                    uploadId,
+                    token
+                );
                 // ✅ No status/data wrapping — just return the array
                 return flashcards;
             }
 
-            if (type === "quiz"){
-                const response = await apiService.generatePDFQuiz(uploadId, token);
-                if (response?.status === "success"){
+            if (type === "quiz") {
+                const response = await apiService.generatePDFQuiz(
+                    uploadId,
+                    token
+                );
+                if (response?.status === "success") {
                     return response.data.quiz;
                 } else {
-                    throw new Error (response.message || "Failed to generate quiz");
+                    throw new Error(
+                        response.message || "Failed to generate quiz"
+                    );
                 }
             }
 
@@ -189,97 +203,103 @@ const PDFUploadPage = () => {
         }
     };
 
-const handleGenerate = async () => {
-    if (!uploadedFile || selectedOptions.length === 0) return;
+    const handleGenerate = async () => {
+        if (!uploadedFile || selectedOptions.length === 0) return;
 
-    setIsProcessing(true);
-    setIsUploading(true);
-    setProcessingStep(0);
-    setError(null);
+        setIsProcessing(true);
+        setIsUploading(true);
+        setProcessingStep(0);
+        setError(null);
 
-    try {
-        const uploadId = await uploadPdfToLevi(uploadedFile);
-        const generatedResults = {};
+        try {
+            const uploadId = await uploadPdfToLevi(uploadedFile);
+            const generatedResults = {};
 
-        // Handle Summary Generation
-        if (selectedOptions.includes("summary")) {
-            try {
-                const response = await requestAI(uploadId, "summary");
-                if (response && response.summary) {
+            // Handle Summary Generation
+            if (selectedOptions.includes("summary")) {
+                try {
+                    const response = await requestAI(uploadId, "summary");
+                    if (response && response.summary) {
+                        generatedResults.summary = {
+                            content: response.summary,
+                        };
+                    } else {
+                        generatedResults.summary = {
+                            error: "Summary generation failed or returned no data.",
+                        };
+                    }
+                } catch (err) {
                     generatedResults.summary = {
-                        content: response.summary,
-                    };
-                } else {
-                    generatedResults.summary = {
-                        error: "Summary generation failed or returned no data.",
+                        error: `Summary generation failed: ${err.message}`,
                     };
                 }
-            } catch (err) {
-                generatedResults.summary = {
-                    error: `Summary generation failed: ${err.message}`,
-                };
             }
-        }
 
-        // Handle Flashcards Generation
-        if (selectedOptions.includes("flashcards")) {
-            try {
-                const response = await requestAI(uploadId, "flashcards");
-                const flashcardsArray = response.flashcards || response.data?.flashcards || response.data;
+            // Handle Flashcards Generation
+            if (selectedOptions.includes("flashcards")) {
+                try {
+                    const response = await requestAI(uploadId, "flashcards");
+                    const flashcardsArray =
+                        response.flashcards ||
+                        response.data?.flashcards ||
+                        response.data;
 
-                if (!Array.isArray(flashcardsArray)) {
-                    throw new Error("Flashcards data is not an array");
+                    if (!Array.isArray(flashcardsArray)) {
+                        throw new Error("Flashcards data is not an array");
+                    }
+
+                    const formattedFlashcards = {
+                        count: flashcardsArray.length,
+                        cards: flashcardsArray.map((card) => ({
+                            front: card.front,
+                            back: card.back,
+                        })),
+                    };
+
+                    generatedResults.flashcards = formattedFlashcards;
+                    setFlashcardData(formattedFlashcards);
+                } catch (err) {
+                    generatedResults.flashcards = {
+                        error: `Flashcards generation failed: ${err.message}`,
+                    };
                 }
-
-                const formattedFlashcards = {
-                    count: flashcardsArray.length,
-                    cards: flashcardsArray.map(card => ({
-                        front: card.front,
-                        back: card.back,
-                    })),
-                };
-
-                generatedResults.flashcards = formattedFlashcards;
-                setFlashcardData(formattedFlashcards);
-            } catch (err) {
-                generatedResults.flashcards = {
-                    error: `Flashcards generation failed: ${err.message}`,
-                };
             }
-        }
 
-        // Handle Quiz Generation
-        if (selectedOptions.includes("quiz")) {
-            try {
-                const response = await requestAI(uploadId, "quiz");
-                if (response && response.questionsData && Array.isArray(response.questionsData)) {
-                    console.log("✅ Quiz data received:", response);
-                    generatedResults.quiz = response;
-                } else {
+            // Handle Quiz Generation
+            if (selectedOptions.includes("quiz")) {
+                try {
+                    const response = await requestAI(uploadId, "quiz");
+                    if (
+                        response &&
+                        response.questionsData &&
+                        Array.isArray(response.questionsData)
+                    ) {
+                        console.log("✅ Quiz data received:", response);
+                        generatedResults.quiz = response;
+                    } else {
+                        generatedResults.quiz = {
+                            error: "Quiz generation failed or returned invalid format.",
+                        };
+                    }
+                } catch (err) {
                     generatedResults.quiz = {
-                        error: "Quiz generation failed or returned invalid format.",
+                        error: `Quiz generation failed: ${err.message}`,
                     };
                 }
-            } catch (err) {
-                generatedResults.quiz = {
-                    error: `Quiz generation failed: ${err.message}`,
-                };
             }
+
+            // Always set results, even if some operations failed
+            setResults(generatedResults);
+            setProcessingStep(5);
+        } catch (err) {
+            // This catch block now only handles upload errors or other critical failures
+            setError(err.message);
+        } finally {
+            setIsProcessing(false);
+            setIsUploading(false);
+            setIsGeneratingFlashcards(false);
         }
-
-        // Always set results, even if some operations failed
-        setResults(generatedResults);
-        setProcessingStep(5);
-
-    } catch (err) {
-        // This catch block now only handles upload errors or other critical failures
-        setError(err.message);
-    } finally {
-        setIsProcessing(false);
-        setIsUploading(false);
-        setIsGeneratingFlashcards(false);
-    }
-};
+    };
 
     const resetUpload = () => {
         setUploadedFile(null);
@@ -422,12 +442,13 @@ const handleGenerate = async () => {
                                     style={{ animationDelay: "0.4s" }}
                                 >
                                     <div
-                                        className={`relative border-2 border-dashed rounded-3xl p-12 text-center transition-all duration-300 backdrop-blur-sm ${isDragOver
+                                        className={`relative border-2 border-dashed rounded-3xl p-12 text-center transition-all duration-300 backdrop-blur-sm ${
+                                            isDragOver
                                                 ? "border-blue-500 bg-blue-50/70 scale-105"
                                                 : uploadedFile
-                                                    ? "border-green-500 bg-green-50/70 scale-105"
-                                                    : "border-gray-300 bg-white/70 hover:border-blue-400 hover:bg-blue-50/70 hover:scale-105"
-                                            }`}
+                                                ? "border-green-500 bg-green-50/70 scale-105"
+                                                : "border-gray-300 bg-white/70 hover:border-blue-400 hover:bg-blue-50/70 hover:scale-105"
+                                        }`}
                                         onDrop={handleDrop}
                                         onDragOver={handleDragOver}
                                         onDragLeave={handleDragLeave}
@@ -510,49 +531,54 @@ const handleGenerate = async () => {
                                                                 option.id
                                                             )
                                                         }
-                                                        className={`relative p-6 rounded-2xl border-2 cursor-pointer transition-all duration-300 transform hover:scale-105 backdrop-blur-sm animate-fade-in ${selectedOptions.includes(
-                                                            option.id
-                                                        )
+                                                        className={`relative p-6 rounded-2xl border-2 cursor-pointer transition-all duration-300 transform hover:scale-105 backdrop-blur-sm animate-fade-in ${
+                                                            selectedOptions.includes(
+                                                                option.id
+                                                            )
                                                                 ? `border-${option.color}-500 bg-${option.color}-50/70 scale-105`
                                                                 : "border-gray-200 bg-white/70 hover:border-gray-300"
-                                                            }`}
+                                                        }`}
                                                         style={{
-                                                            animationDelay: `${0.7 +
+                                                            animationDelay: `${
+                                                                0.7 +
                                                                 index * 0.1
-                                                                }s`,
+                                                            }s`,
                                                         }}
                                                     >
                                                         {selectedOptions.includes(
                                                             option.id
                                                         ) && (
-                                                                <div className="absolute top-4 right-4 animate-bounce">
-                                                                    <Check className="w-5 h-5 text-green-600" />
-                                                                </div>
-                                                            )}
+                                                            <div className="absolute top-4 right-4 animate-bounce">
+                                                                <Check className="w-5 h-5 text-green-600" />
+                                                            </div>
+                                                        )}
                                                         <div
-                                                            className={`w-12 h-12 rounded-full mb-4 flex items-center justify-center transition-all duration-300 ${option.color ===
-                                                                    "blue"
+                                                            className={`w-12 h-12 rounded-full mb-4 flex items-center justify-center transition-all duration-300 ${
+                                                                option.color ===
+                                                                "blue"
                                                                     ? "bg-blue-100"
                                                                     : option.color ===
-                                                                        "purple"
-                                                                        ? "bg-purple-100"
-                                                                        : "bg-pink-100"
-                                                                } ${selectedOptions.includes(
+                                                                      "purple"
+                                                                    ? "bg-purple-100"
+                                                                    : "bg-pink-100"
+                                                            } ${
+                                                                selectedOptions.includes(
                                                                     option.id
                                                                 )
                                                                     ? "animate-pulse"
                                                                     : ""
-                                                                }`}
+                                                            }`}
                                                         >
                                                             <div
-                                                                className={`${option.color ===
-                                                                        "blue"
+                                                                className={`${
+                                                                    option.color ===
+                                                                    "blue"
                                                                         ? "text-blue-600"
                                                                         : option.color ===
-                                                                            "purple"
-                                                                            ? "text-purple-600"
-                                                                            : "text-pink-600"
-                                                                    }`}
+                                                                          "purple"
+                                                                        ? "text-purple-600"
+                                                                        : "text-pink-600"
+                                                                }`}
                                                             >
                                                                 {option.icon}
                                                             </div>
@@ -633,10 +659,11 @@ const handleGenerate = async () => {
                                     <div
                                         className="bg-gradient-to-r from-blue-500 to-purple-600 h-3 rounded-full transition-all duration-1000 animate-pulse"
                                         style={{
-                                            width: `${((processingStep + 1) /
+                                            width: `${
+                                                ((processingStep + 1) /
                                                     processingSteps.length) *
                                                 100
-                                                }%`,
+                                            }%`,
                                         }}
                                     ></div>
                                 </div>
@@ -671,12 +698,17 @@ const handleGenerate = async () => {
                                                 </h3>
                                             </div>
                                             <div className="prose prose-lg text-gray-700 mb-6 max-w-none">
-                                                <ReactMarkdown>{results.summary.content}</ReactMarkdown>
+                                                <ReactMarkdown>
+                                                    {results.summary.content}
+                                                </ReactMarkdown>
                                             </div>
 
                                             <button
                                                 onClick={() =>
-                                                    downloadContent(results.summary.content, "summary.txt")
+                                                    downloadContent(
+                                                        results.summary.content,
+                                                        "summary.txt"
+                                                    )
                                                 }
                                                 className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-all"
                                             >
@@ -685,23 +717,27 @@ const handleGenerate = async () => {
                                         </div>
                                     )}
 
-
                                     {/* Show flashcards when results are available */}
-                                    {selectedOptions.includes("flashcards") && (
-                                        console.log("✅ flashcardData being passed:", flashcardData),
-                                        <ModernFlashcards
-                                            flashcardData={flashcardData}
-                                            isLoading={isGeneratingFlashcards}
-                                        />
-                                    )}
+                                    {selectedOptions.includes("flashcards") &&
+                                        (console.log(
+                                            "✅ flashcardData being passed:",
+                                            flashcardData
+                                        ),
+                                        (
+                                            <ModernFlashcards
+                                                flashcardData={flashcardData}
+                                                isLoading={
+                                                    isGeneratingFlashcards
+                                                }
+                                            />
+                                        ))}
 
                                     {/* Quiz Section */}
-
 
                                     <QuizResultsSection
                                         results={results}
                                         uploadedFile={uploadedFile}
-                                        onStartQuiz={() => { }}
+                                        onStartQuiz={() => {}}
                                     />
                                 </div>
 
