@@ -41,10 +41,7 @@ const PDFUploadPage = () => {
 
     const router = useRouter();
     const fileInputRef = useRef(null);
-    const accessToken =
-        typeof window !== "undefined"
-            ? localStorage.getItem("accessToken")
-            : null;
+    const accessToken = apiService.getToken();
 
     useEffect(() => {
         if (!accessToken) router.push("/login");
@@ -54,10 +51,8 @@ const PDFUploadPage = () => {
         let intervalId;
 
         const startTracking = async () => {
-            const token = await getUserTokens();
-            console.log(token); // Temp logging for debugging
             intervalId = setInterval(() => {
-                apiService.addStudyTime(1, token);
+                apiService.addStudyTime(1, accessToken);
             }, 60 * 1000); // every 60 seconds
         };
 
