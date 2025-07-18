@@ -310,13 +310,13 @@ class APIService {
     }
 
     async addStudyTime(minutes, token) {
-        return await this.makeRequest("/user/me/increment-study-time", {
+        return await this.makeRequest("/user/me/increment-study-time/", {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify({ minutes }),
+            body: { minutes },
         });
     }
 
@@ -330,7 +330,7 @@ class APIService {
     }
 
     async getUserStats(token) {
-        return this.makeRequest("/user/me/stats", {
+        return this.makeRequest("/user/me/stats/", {
             method: "GET",
             headers: {
                 Authorization: `Bearer ${token}`,
