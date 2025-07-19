@@ -86,15 +86,14 @@ useEffect(() => {
   fetchStats();
 }, []);
 
-useEffect(() =>{
+useEffect(() => {
   const fetchData = async () => {
-    try{
+    try {
       const rawData = await getWeeklyActivity();
 
-      //formated
       const formatted = rawData.map((entry) => ({
-        day: dayjs(entry.data).format(ddd), 
-        summaries:entry.summaries,
+        day: dayjs(entry.date).format("ddd"),
+        summaries: entry.summaries,
         quizzes: entry.quizzes,
         flashcards: entry.flashcards,
       }));
@@ -105,7 +104,9 @@ useEffect(() =>{
     }
   };
 
+  fetchData(); // ← THIS WAS MISSING
 }, []);
+
 
 
 const hours = Math.floor(studyTime / 60);
