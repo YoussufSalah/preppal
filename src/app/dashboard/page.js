@@ -18,6 +18,7 @@ const Dashboard = () => {
   const [studyTime, setStudyTime] = useState(0);
   const [weeklyData, setWeeklyData] = useState([]);
 
+
 const accessToken =
   typeof window !== "undefined"
     ? localStorage.getItem("accessToken")
