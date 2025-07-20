@@ -1,4 +1,4 @@
-import { headers } from "next/headers";
+
 
 if (!process.env.NEXT_PUBLIC_API_BASE_URL) {
     throw new Error("Missing NEXT_PUBLIC_API_BASE_URL in env!");
