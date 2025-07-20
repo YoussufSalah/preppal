@@ -235,8 +235,6 @@ const minutes = studyTime % 60;
             <nav className="flex px-3 sm:px-6 overflow-x-auto scrollbar-hide">
               {[
                 { id: 'overview', label: 'Overview', icon: BarChart3 },
-                { id: 'badges', label: 'Achievements', icon: Trophy },
-                { id: 'activity', label: 'Recent Activity', icon: Clock }
               ].map((tab) => (
                 <button
                   key={tab.id}
@@ -302,52 +300,6 @@ const minutes = studyTime % 60;
                           <span className="text-xs text-purple-700">{day.flashcards} cards</span>
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {activeTab === 'badges' && (
-              <div>
-                <div className="flex items-center justify-between mb-4 sm:mb-6">
-                  <h3 className="text-base sm:text-lg font-semibold text-gray-900">Achievements</h3>
-                  <span className="text-xs sm:text-sm text-gray-600">
-                    {badges.filter(b => b.earned).length} of {badges.length} earned
-                  </span>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                  {badges.map((badge) => (
-                    <Badge key={badge.id} badge={badge} />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {activeTab === 'activity' && (
-              <div>
-                <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
-                <div className="space-y-3 sm:space-y-4">
-                  {recentActivity.map((activity) => (
-                    <div key={activity.id} className="flex items-center space-x-3 sm:space-x-4 p-3 sm:p-4 bg-gray-50 rounded-lg">
-                      <div className={`p-2 rounded-lg flex-shrink-0 ${
-                        activity.type === 'summary' ? 'bg-blue-100' :
-                        activity.type === 'quiz' ? 'bg-green-100' : 'bg-purple-100'
-                      }`}>
-                        {activity.type === 'summary' && <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />}
-                        {activity.type === 'quiz' && <Brain className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />}
-                        {activity.type === 'flashcard' && <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600" />}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-medium text-gray-900 text-sm sm:text-base truncate">{activity.title}</p>
-                        <p className="text-xs sm:text-sm text-gray-600">{activity.time}</p>
-                      </div>
-                      {activity.score && (
-                        <div className="text-right flex-shrink-0">
-                          <span className="text-base sm:text-lg font-semibold text-green-600">{activity.score}%</span>
-                          <p className="text-xs text-gray-500">Score</p>
-                        </div>
-                      )}
                     </div>
                   ))}
                 </div>
