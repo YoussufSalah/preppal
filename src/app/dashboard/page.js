@@ -17,6 +17,7 @@ const Dashboard = () => {
   const [totalQuizCount, setTotalQuizCount] = useState(0);
   const [studyTime, setStudyTime] = useState(0);
   const [weeklyData, setWeeklyData] = useState([]);
+  const [isProMember, setIsProMember] = useState(false);
 
 
 const accessToken =
@@ -44,7 +45,17 @@ useEffect(() => {
         setJoinDate(formattedDate);
 
         setStudyTime(stats.totalStudyTime || 0);
+
+      if(
+        typeof stats.subscription === "object" && 
+        stats.subscription.name === "pro" &&
+        stats.subscription.isActive
+      ) {
+        setIsProMember(true);
+      } else{
+        setIsProMember(false);
       }
+    }
     } catch (err) {
       console.log("❌ Failed to fetch stats:", err);
       setEmail("youremail@preppal.com");
@@ -118,23 +129,6 @@ const minutes = studyTime % 60;
     streak: 12,
     accuracy: 87
   };
-
-  const badges = [
-    { id: 1, name: "Quick Learner", description: "Complete 10 quizzes", icon: Brain, earned: true, color: "bg-blue-500" },
-    { id: 2, name: "Streak Master", description: "Maintain 7-day streak", icon: Flame, earned: true, color: "bg-orange-500" },
-    { id: 3, name: "Summary Pro", description: "Generate 25 summaries", icon: FileText, earned: true, color: "bg-green-500" },
-    { id: 4, name: "Flashcard Champion", description: "Create 100 flashcards", icon: Zap, earned: true, color: "bg-purple-500" },
-    { id: 5, name: "Perfect Score", description: "Score 100% on a quiz", icon: Target, earned: false, color: "bg-yellow-500" },
-    { id: 6, name: "Study Warrior", description: "Study for 100 hours", icon: Award, earned: false, color: "bg-red-500" }
-  ];
-
-  const recentActivity = [
-    { id: 1, type: "summary", title: "Advanced Mathematics Chapter 5", time: "2 hours ago" },
-    { id: 2, type: "quiz", title: "Biology Quiz - Cell Structure", time: "5 hours ago", score: 85 },
-    { id: 3, type: "flashcard", title: "Spanish Vocabulary Set 3", time: "1 day ago" },
-    { id: 4, type: "summary", title: "World History - Renaissance", time: "2 days ago" }
-  ];
-
  
   const StatCard = ({ icon: Icon, title, value, subtitle, color }) => (
     <div className="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
@@ -142,32 +136,10 @@ const minutes = studyTime % 60;
         <div className="flex-1 min-w-0">
           <p className="text-gray-600 text-sm font-medium truncate">{title}</p>
           <p className="text-2xl sm:text-3xl font-bold text-gray-900 mt-1">{value}</p>
-          {subtitle && <p className="text-gray-500 text-xs sm:text-sm mt-1 truncate">{subtitle}</p>}
         </div>
         <div className={`${color} p-2 sm:p-3 rounded-lg flex-shrink-0 ml-2`}>
           <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
         </div>
-      </div>
-    </div>
-  );
-
-  const Badge = ({ badge }) => (
-    <div className={`relative p-3 sm:p-4 rounded-xl border-2 transition-all hover:scale-105 ${
-      badge.earned 
-        ? 'bg-white border-gray-200 shadow-sm' 
-        : 'bg-gray-50 border-gray-100 opacity-60'
-    }`}>
-      <div className="flex flex-col items-center text-center">
-        <div className={`${badge.color} p-2 sm:p-3 rounded-full mb-2 sm:mb-3 ${!badge.earned && 'grayscale'}`}>
-          <badge.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-        </div>
-        <h3 className="font-semibold text-gray-900 mb-1 text-sm sm:text-base">{badge.name}</h3>
-        <p className="text-xs sm:text-sm text-gray-600 leading-tight">{badge.description}</p>
-        {badge.earned && (
-          <div className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-green-500 rounded-full p-1">
-            <Star className="w-3 h-3 sm:w-4 sm:h-4 text-white fill-current" />
-          </div>
-        )}
       </div>
     </div>
   );
@@ -189,11 +161,12 @@ const minutes = studyTime % 60;
               <p className="text-xs sm:text-sm text-gray-500 mt-1">Member since {joinDate}</p>
             </div>
             <div className="text-center sm:text-right">
+              {isProMember && ( 
               <div className="flex items-center justify-center sm:justify-end space-x-2 text-green-600 mb-2">
                 <Trophy className="w-4 h-4 sm:w-5 sm:h-5" />
                 <span className="font-semibold text-sm sm:text-base">Pro Member</span>
               </div>
-              <p className="text-xs sm:text-sm text-gray-500">Level 12 Learner</p>
+              )}
             </div>
           </div>
         </div>
@@ -204,28 +177,24 @@ const minutes = studyTime % 60;
             icon={FileText} 
             title="Total Summaries" 
             value={totalSummaryCount} 
-            subtitle="This month: 12"
             color="bg-blue-500" 
           />
           <StatCard 
             icon={Brain} 
             title="Quizzes Taken" 
             value={totalQuizCount} 
-            subtitle={`${userData.accuracy}% avg score`}
             color="bg-green-500" 
           />
           <StatCard 
             icon={Zap} 
             title="Flashcards Created" 
             value={totalFlashcardCount} 
-            subtitle="Across 8 subjects"
             color="bg-purple-500" 
           />
           <StatCard 
             icon={Clock} 
             title="Study Time" 
             value={`${hours ? `${hours}h ` : ""}${minutes}m`}
-            subtitle="This month"
             color="bg-orange-500" 
           />
         </div>
