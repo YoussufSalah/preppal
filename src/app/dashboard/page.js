@@ -3,6 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { User, Calendar, Trophy, TrendingUp, FileText, Brain, Zap, Target, Award, Star, Flame, BookOpen, Clock, BarChart3 } from 'lucide-react';
 import { getCurrentUser, signOut, } from "../../utils/auth.js";
 import { apiService } from '@/utils/APIService.js';
+import { getWeeklyActivity } from '@/utils/getWeeklyActivity.js';
+import dayjs from "dayjs";
+
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -13,6 +16,7 @@ const Dashboard = () => {
   const [totalFlashcardCount, setTotalFlashcardCount] = useState(0);
   const [totalQuizCount, setTotalQuizCount] = useState(0);
   const [studyTime, setStudyTime] = useState(0);
+  const [weeklyData, setWeeklyData] = useState([]);
 
 const accessToken =
   typeof window !== "undefined"
@@ -82,6 +86,28 @@ useEffect(() => {
   fetchStats();
 }, []);
 
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const rawData = await getWeeklyActivity();
+
+      const formatted = rawData.map((entry) => ({
+        day: dayjs(entry.date).format("ddd"),
+        summaries: entry.summaries,
+        quizzes: entry.quizzes,
+        flashcards: entry.flashcards,
+      }));
+
+      setWeeklyData(formatted);
+    } catch (error) {
+      console.error("Failed to fetch weekly activity:", error);
+    }
+  };
+
+  fetchData(); // ← THIS WAS MISSING
+}, []);
+
+
 
 const hours = Math.floor(studyTime / 60);
 const minutes = studyTime % 60;
@@ -108,16 +134,7 @@ const minutes = studyTime % 60;
     { id: 4, type: "summary", title: "World History - Renaissance", time: "2 days ago" }
   ];
 
-  const weeklyData = [
-    { day: 'Mon', summaries: 3, quizzes: 2, flashcards: 8 },
-    { day: 'Tue', summaries: 5, quizzes: 1, flashcards: 12 },
-    { day: 'Wed', summaries: 2, quizzes: 4, flashcards: 6 },
-    { day: 'Thu', summaries: 4, quizzes: 3, flashcards: 15 },
-    { day: 'Fri', summaries: 6, quizzes: 2, flashcards: 10 },
-    { day: 'Sat', summaries: 1, quizzes: 5, flashcards: 8 },
-    { day: 'Sun', summaries: 3, quizzes: 1, flashcards: 5 }
-  ];
-
+ 
   const StatCard = ({ icon: Icon, title, value, subtitle, color }) => (
     <div className="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
       <div className="flex items-center justify-between">
