@@ -4,12 +4,22 @@ import React, { useState, useEffect } from "react";
 import { Menu, X, Brain, User, LogOut,Flame} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { getCurrentUser, signOut } from "../../utils/auth.js";
+import { apiService } from "@/utils/APIService.js";
+import { trackStreak } from "@/utils/streak.js";
 
 
 const PrepPalNavbar = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [user, setUser] = useState(null);
+    const [currentStreak, setCurrentStreak] = useState(0);
+    const [bestStreak, setBestStreak] = useState(0);
+
     const router = useRouter();
+
+    const accessToken =
+        typeof window !== "undefined"
+        ? localStorage.getItem("accessToken")
+        : null;
 
     const toggleMobileMenu = () => {
         setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -41,6 +51,37 @@ const PrepPalNavbar = () => {
         fetchUser();
     }, []);
 
+useEffect(() => {
+  const syncStreakWithBackend = async () => {
+    if (!accessToken) return;
+
+    try {
+      // Step 1: Run local tracking logic
+      const { current, best, updated } = trackStreak();
+
+      // Step 2: Update UI immediately
+      setCurrentStreak(current);
+      setBestStreak(best);
+
+      // Step 3: If updated locally, sync to backend
+      if (updated) {
+        await apiService.updateUserStreak(
+          { current_streak: current, best_streak: best },
+          accessToken
+        );
+        console.log("✅ Streak synced with backend.");
+      } else {
+        console.log("📅 No streak update needed today.");
+      }
+    } catch (error) {
+      console.error("❌ Streak sync failed:", error);
+    }
+  };
+
+  syncStreakWithBackend();
+}, []);
+
+    
     const navItems = [
         { name: "Home", href: "/" },
         { name: "Features", href: "/feature" },
@@ -77,7 +118,7 @@ const PrepPalNavbar = () => {
                             <div className="flex items-center space-x-2 bg-orange-100 px-3 py-1 rounded-full">
                                 <Flame className="w-4 h-4 text-orange-500" />
                                 <span className="text-orange-700 font-medium">
-                                    {4} day streak
+                                    {currentStreak} day streak
                                 </span>
                             </div>
                         {user ? (

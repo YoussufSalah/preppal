@@ -1,3 +1,5 @@
+
+
 if (!process.env.NEXT_PUBLIC_API_BASE_URL) {
     throw new Error("Missing NEXT_PUBLIC_API_BASE_URL in env!");
 }
@@ -336,6 +338,18 @@ class APIService {
             },
         });
     }
+async updateUserStreak({ current_streak, best_streak }, token) {
+    return this.makeRequest("/users/me", {
+        method: "PATCH",
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+            current_streak,
+            best_streak,
+        }),
+    });
+}
 
     // Utility Methods
     getToken() {
