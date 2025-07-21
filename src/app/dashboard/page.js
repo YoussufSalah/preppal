@@ -18,6 +18,7 @@ const Dashboard = () => {
   const [studyTime, setStudyTime] = useState(0);
   const [weeklyData, setWeeklyData] = useState([]);
   const [isProMember, setIsProMember] = useState(false);
+  const [credits, setCredits] = useState(0);
 
 
 const accessToken =
@@ -36,6 +37,7 @@ useEffect(() => {
       if (stats) {
         setEmail(stats.email || "youremail@preppal.com");
         setUsername(stats.username || "YourUsername");
+        setCredits(stats.availableCredits || 0);
 
         const formattedDate = new Date(stats.joinedAt).toLocaleDateString("en-US", {
           year: "numeric",
@@ -196,6 +198,12 @@ const minutes = studyTime % 60;
             title="Study Time" 
             value={`${hours ? `${hours}h ` : ""}${minutes}m`}
             color="bg-orange-500" 
+          />
+          <StatCard
+            icon={star}
+            title={"Credits Remaining"}
+            value={credits}
+            color="bg-yellow-500"
           />
         </div>
 
