@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect, useState } from 'react';
-import { User, Calendar, Trophy, TrendingUp, FileText, Brain, Zap, Target, Award, Star, Flame, BookOpen, Clock, BarChart3 } from 'lucide-react';
+import { User, Calendar, Trophy, TrendingUp, FileText, Brain, Zap, Target, Award, Star, Flame, BookOpen, Clock, BarChart3, Coins } from 'lucide-react';
 import { getCurrentUser, signOut, } from "../../utils/auth.js";
 import { apiService } from '@/utils/APIService.js';
 import { getWeeklyActivity } from '@/utils/getWeeklyActivity.js';
@@ -200,7 +200,7 @@ const minutes = studyTime % 60;
             color="bg-orange-500" 
           />
           <StatCard
-            icon={star}
+            icon={Coins}
             title={"Credits Remaining"}
             value={credits}
             color="bg-yellow-500"
