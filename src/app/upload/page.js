@@ -143,13 +143,14 @@ const PDFUploadPage = () => {
 
         const response = await apiService.uploadPDF(file, token);
         if (response.status === "success") {
-            return response.data.uploadLog.id;
+            const { parsedText, pageCount } = response.data;
+            return { parsedText, pageCount};
         } else {
             throw new Error(response.message || "Failed to upload PDF");
         }
     };
 
-    const requestAI = async (uploadId, type) => {
+    const requestAI = async (parsedText, pageCount, type) => {
         const token = getToken();
         if (!token) {
             throw new Error("No authentication token found");
@@ -157,8 +158,9 @@ const PDFUploadPage = () => {
 
         try {
             if (type === "summary") {
-                const response = await apiService.generatePDFSummary(
-                    uploadId,
+                const response = await apiService.generateSummaryFromParsedText(
+                    parsedText,
+                    pageCount,
                     token
                 );
                 if (response?.status === "success") {
@@ -171,8 +173,9 @@ const PDFUploadPage = () => {
             }
 
             if (type === "flashcards") {
-                const flashcards = await apiService.generatePDFFlashcards(
-                    uploadId,
+                const flashcards = await apiService.generateFlashcardsFromParsedText(
+                    parsedText,
+                    pageCount,
                     token
                 );
                 // ✅ No status/data wrapping — just return the array
@@ -180,8 +183,9 @@ const PDFUploadPage = () => {
             }
 
             if (type === "quiz") {
-                const response = await apiService.generatePDFQuiz(
-                    uploadId,
+                const response = await apiService.generateQuizFromParsedText(
+                    parsedText,
+                    pageCount,
                     token
                 );
                 if (response?.status === "success") {
@@ -208,13 +212,13 @@ const PDFUploadPage = () => {
         setError(null);
 
         try {
-            const uploadId = await uploadPdfToLevi(uploadedFile);
+            const { parsedText, pageCount } = await uploadPdfToLevi(uploadedFile);
             const generatedResults = {};
 
             // Handle Summary Generation
             if (selectedOptions.includes("summary")) {
                 try {
-                    const response = await requestAI(uploadId, "summary");
+                    const response = await requestAI(parsedText, pageCount, "summary");
                     if (response && response.summary) {
                         generatedResults.summary = {
                             content: response.summary,
@@ -234,7 +238,7 @@ const PDFUploadPage = () => {
             // Handle Flashcards Generation
             if (selectedOptions.includes("flashcards")) {
                 try {
-                    const response = await requestAI(uploadId, "flashcards");
+                    const response = await requestAI(parsedText, pageCount, "flashcards");
                     const flashcardsArray =
                         response.flashcards ||
                         response.data?.flashcards ||
@@ -264,7 +268,7 @@ const PDFUploadPage = () => {
             // Handle Quiz Generation
             if (selectedOptions.includes("quiz")) {
                 try {
-                    const response = await requestAI(uploadId, "quiz");
+                   const response = await requestAI(parsedText, pageCount, "quiz");
                     if (
                         response &&
                         response.questionsData &&

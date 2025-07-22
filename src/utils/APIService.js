@@ -255,14 +255,15 @@ class APIService {
     }
 
     // Summary Methods
-    async generatePDFSummary(uploadId, token) {
-        return this.makeRequest(`/summarize/pdf/${uploadId}`, {
-            method: "GET",
+    async generateSummaryFromParsedText(parsedText, pagesCount, token) {
+        return this.makeRequest(`/summarize/pdf-text`, {
+            method: "POST",
             headers: {
-                Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
             },
+            body: { parsedText, pagesCount },
         });
-    }
+}
 
     async getAllSummaries(token) {
         return this.makeRequest("/summarize/", {
@@ -274,14 +275,15 @@ class APIService {
     }
 
     // Flashcard Methods
-    async generatePDFFlashcards(uploadId, token) {
-        return this.makeRequest(`/flashcards/pdf/${uploadId}`, {
-            method: "GET",
+    async generateFlashcardsFromParsedText(parsedText, pagesCount, token) {
+        return this.makeRequest(`/flashcards/pdf-text`, {
+            method: "POST",
             headers: {
-                Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
             },
+            body: { parsedText, pagesCount },
         });
-    }
+}
 
     async getAllFlashcards(token) {
         return this.makeRequest("/flashcards/", {
@@ -293,14 +295,15 @@ class APIService {
     }
 
     // Quiz Methods
-    async generatePDFQuiz(uploadId, token) {
-        return this.makeRequest(`/quizzes/pdf/${uploadId}`, {
-            method: "GET",
+    async generateQuizFromParsedText(parsedText, pagesCount, token) {
+        return this.makeRequest(`/quizzes/pdf-text`, {
+            method: "POST",
             headers: {
-                Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
             },
+            body: { parsedText, pagesCount },
         });
-    }
+}
 
     async getAllQuizzes(token) {
         return this.makeRequest("/quizzes/", {
