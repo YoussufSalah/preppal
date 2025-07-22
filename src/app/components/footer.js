@@ -36,22 +36,7 @@ export default function Footer() {
                                     Pricing
                                 </a>
                             </li>
-                            <li>
-                                <a
-                                    href="#"
-                                    className="hover:text-white transition-colors"
-                                >
-                                    API
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="#"
-                                    className="hover:text-white transition-colors"
-                                >
-                                    Integrations
-                                </a>
-                            </li>
+                            
                         </ul>
                     </div>
                     <div>
@@ -62,23 +47,7 @@ export default function Footer() {
                                     href="#"
                                     className="hover:text-white transition-colors"
                                 >
-                                    Help Center
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="#"
-                                    className="hover:text-white transition-colors"
-                                >
                                     Contact Us
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="#"
-                                    className="hover:text-white transition-colors"
-                                >
-                                    System Status
                                 </a>
                             </li>
                             <li>
@@ -102,22 +71,7 @@ export default function Footer() {
                                     About
                                 </a>
                             </li>
-                            <li>
-                                <a
-                                    href="/update"
-                                    className="hover:text-white transition-colors"
-                                >
-                                    Blog
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="#"
-                                    className="hover:text-white transition-colors"
-                                >
-                                    Careers
-                                </a>
-                            </li>
+                            
                             <li>
                                 <a
                                     href="/privacy-policy"

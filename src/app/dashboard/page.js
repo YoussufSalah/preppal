@@ -104,33 +104,30 @@ useEffect(() => {
   const fetchData = async () => {
     try {
       const rawData = await getWeeklyActivity();
+      console.log("📅 Weekly Activity:", rawData);
+
 
       const formatted = rawData.map((entry) => ({
-        day: dayjs(entry.date).format("ddd"),
+        day: dayjs(entry.date).format("ddd"), // e.g., "Mon", "Tue"
         summaries: entry.summaries,
         quizzes: entry.quizzes,
         flashcards: entry.flashcards,
       }));
 
-      setWeeklyData(formatted);
+      setWeeklyData(formatted); // ✅ This updates what you're mapping in the UI
     } catch (error) {
       console.error("Failed to fetch weekly activity:", error);
     }
   };
 
-  fetchData(); // ← THIS WAS MISSING
+  fetchData();
 }, []);
 
 
 
 const hours = Math.floor(studyTime / 60);
 const minutes = studyTime % 60;
-  // Mock user data
-  const userData = {
-    name: "john",
-    streak: 12,
-    accuracy: 87
-  };
+
  
   const StatCard = ({ icon: Icon, title, value, subtitle, color }) => (
     <div className="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
