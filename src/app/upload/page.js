@@ -26,6 +26,7 @@ import ModernFlashcards from "../components/flashcard";
 import QuizResultsSection from "../components/quiz";
 import BetaNotice from "../components/betaNotice";
 import ReactMarkdown from "react-markdown";
+import { downloadMarkdownPDF } from "@/utils/downloadMarkdownPDF";
 
 const PDFUploadPage = () => {
     const [uploadedFile, setUploadedFile] = useState(null);
@@ -698,16 +699,11 @@ const PDFUploadPage = () => {
                                                 </ReactMarkdown>
                                             </div>
 
-                                            <button
-                                                onClick={() =>
-                                                    downloadContent(
-                                                        results.summary.content,
-                                                        "summary.txt"
-                                                    )
-                                                }
-                                                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-all"
+                                           <button
+                                            onClick={() => downloadMarkdownPDF(results.summary.content, "PrepPal-Summary.pdf")}
+                                            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-all"
                                             >
-                                                Download Summary
+                                                Download as PDF
                                             </button>
                                         </div>
                                     )}

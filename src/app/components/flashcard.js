@@ -269,16 +269,6 @@ const ModernFlashcards = ({ flashcardData = null, isLoading = false }) => {
         </div>
       </div>
 
-      {/* Export Button - Mobile Optimized */}
-      <div className="flex justify-center">
-        <button
-          onClick={() => exportFlashcardsToAnki(currentFlashcardData)}
-          className="flex items-center text-purple-600 hover:text-purple-700 active:text-purple-800 font-medium transition-all bg-purple-50 hover:bg-purple-100 active:bg-purple-200 px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-sm sm:text-base touch-manipulation active:scale-95"
-        >
-          <Download className="w-4 h-4 mr-2" />
-          Export to Anki
-        </button>
-      </div>
 
       {/* Mobile-specific styles */}
       <style jsx>{`
