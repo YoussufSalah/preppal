@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { BookOpen, Download, Brain, ChevronLeft, ChevronRight } from 'lucide-react';
+import { downloadAnkiCSV } from "@/utils/downloadAnkiCSV";
 
 const ModernFlashcards = ({ flashcardData = null, isLoading = false }) => {
   // ✅ MOVE ALL HOOKS TO THE TOP - BEFORE ANY CONDITIONAL LOGIC
@@ -116,11 +117,6 @@ const ModernFlashcards = ({ flashcardData = null, isLoading = false }) => {
     setDragStart(null);
     setDragOffset(0);
     setIsDragging(false);
-  };
-
-  const exportFlashcardsToAnki = (flashcards) => {
-    console.log('Exporting flashcards to Anki:', flashcards);
-    alert('Export functionality would be implemented here!');
   };
 
   return (
@@ -269,6 +265,15 @@ const ModernFlashcards = ({ flashcardData = null, isLoading = false }) => {
         </div>
       </div>
 
+      {/* Export Button - Mobile Optimized */}
+      <div className="flex justify-center">
+        <button
+          onClick={() => downloadAnkiCSV(flashcardData, "PrepPal-Flashcards.csv")}
+          className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition-all"
+        >
+          Export to Anki
+        </button>
+      </div>
 
       {/* Mobile-specific styles */}
       <style jsx>{`
