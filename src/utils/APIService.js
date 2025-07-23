@@ -194,8 +194,8 @@ class APIService {
 
     // Summary Methods
     async generateSummaryFromParsedText(parsedText, tokensNeeded, token) {
-        return this.makeRequest(`/summarize/pdf-text`, {
-            method: "POST",
+        return this.makeRequest(`/summarize/pdf`, {
+            method: "GET",
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -205,8 +205,8 @@ class APIService {
 
     // Flashcard Methods
     async generateFlashcardsFromParsedText(parsedText, tokensNeeded, token) {
-        return this.makeRequest(`/flashcards/pdf-text`, {
-            method: "POST",
+        return this.makeRequest(`/flashcards/pdf`, {
+            method: "GET",
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -216,8 +216,8 @@ class APIService {
 
     // Quiz Methods
     async generateQuizFromParsedText(parsedText, tokensNeeded, token) {
-        return this.makeRequest(`/quizzes/pdf-text`, {
-            method: "POST",
+        return this.makeRequest(`/quizzes/pdf`, {
+            method: "GET",
             headers: {
                 Authorization: `Bearer ${token}`,
             },
