@@ -143,14 +143,14 @@ const PDFUploadPage = () => {
 
         const response = await apiService.uploadPDF(file, token);
         if (response.status === "success") {
-            const { parsedText, pageCount } = response.data;
-            return { parsedText, pageCount};
+            const { parsedText, tokensNeeded } = response.data;
+            return { parsedText, tokensNeeded };
         } else {
             throw new Error(response.message || "Failed to upload PDF");
         }
     };
 
-    const requestAI = async (parsedText, pageCount, type) => {
+    const requestAI = async (parsedText, tokensNeeded, type) => {
         const token = getToken();
         if (!token) {
             throw new Error("No authentication token found");
@@ -160,7 +160,7 @@ const PDFUploadPage = () => {
             if (type === "summary") {
                 const response = await apiService.generateSummaryFromParsedText(
                     parsedText,
-                    pageCount,
+                    tokensNeeded,
                     token
                 );
                 if (response?.status === "success") {
@@ -173,11 +173,12 @@ const PDFUploadPage = () => {
             }
 
             if (type === "flashcards") {
-                const flashcards = await apiService.generateFlashcardsFromParsedText(
-                    parsedText,
-                    pageCount,
-                    token
-                );
+                const flashcards =
+                    await apiService.generateFlashcardsFromParsedText(
+                        parsedText,
+                        tokensNeeded,
+                        token
+                    );
                 // ✅ No status/data wrapping — just return the array
                 return flashcards;
             }
@@ -185,7 +186,7 @@ const PDFUploadPage = () => {
             if (type === "quiz") {
                 const response = await apiService.generateQuizFromParsedText(
                     parsedText,
-                    pageCount,
+                    tokensNeeded,
                     token
                 );
                 if (response?.status === "success") {
@@ -212,13 +213,19 @@ const PDFUploadPage = () => {
         setError(null);
 
         try {
-            const { parsedText, pageCount } = await uploadPdfToLevi(uploadedFile);
+            const { parsedText, tokensNeeded } = await uploadPdfToLevi(
+                uploadedFile
+            );
             const generatedResults = {};
 
             // Handle Summary Generation
             if (selectedOptions.includes("summary")) {
                 try {
-                    const response = await requestAI(parsedText, pageCount, "summary");
+                    const response = await requestAI(
+                        parsedText,
+                        tokensNeeded,
+                        "summary"
+                    );
                     if (response && response.summary) {
                         generatedResults.summary = {
                             content: response.summary,
@@ -238,7 +245,11 @@ const PDFUploadPage = () => {
             // Handle Flashcards Generation
             if (selectedOptions.includes("flashcards")) {
                 try {
-                    const response = await requestAI(parsedText, pageCount, "flashcards");
+                    const response = await requestAI(
+                        parsedText,
+                        tokensNeeded,
+                        "flashcards"
+                    );
                     const flashcardsArray =
                         response.flashcards ||
                         response.data?.flashcards ||
@@ -268,7 +279,11 @@ const PDFUploadPage = () => {
             // Handle Quiz Generation
             if (selectedOptions.includes("quiz")) {
                 try {
-                   const response = await requestAI(parsedText, pageCount, "quiz");
+                    const response = await requestAI(
+                        parsedText,
+                        tokensNeeded,
+                        "quiz"
+                    );
                     if (
                         response &&
                         response.questionsData &&
@@ -703,9 +718,14 @@ const PDFUploadPage = () => {
                                                 </ReactMarkdown>
                                             </div>
 
-                                           <button
-                                            onClick={() => downloadMarkdownPDF(results.summary.content, "PrepPal-Summary.pdf")}
-                                            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-all"
+                                            <button
+                                                onClick={() =>
+                                                    downloadMarkdownPDF(
+                                                        results.summary.content,
+                                                        "PrepPal-Summary.pdf"
+                                                    )
+                                                }
+                                                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-all"
                                             >
                                                 Download as PDF
                                             </button>
