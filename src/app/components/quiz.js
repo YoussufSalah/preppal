@@ -453,14 +453,19 @@ const QuizResultsSection = ({ results, uploadedFile, onStartQuiz, isLoading = fa
   
 
   // Validate each question has required fields
-  const validQuestions = results.quiz.questionsData.filter(q => 
-    q.question && 
-    Array.isArray(q.options) && 
-    q.options.length === 4 && 
-    typeof q.correct === 'number' && 
-    q.correct >= 0 && 
-    q.correct <= 3
-  );
+ const validQuestions =
+  Array.isArray(quizData?.questionsData) && quizData.questionsData.length > 0
+    ? quizData.questionsData.filter(
+        (q) =>
+          q.question &&
+          Array.isArray(q.options) &&
+          q.options.length === 4 &&
+          typeof q.correct === "number" &&
+          q.correct >= 0 &&
+          q.correct <= 3
+      )
+    : [];
+
 
   // Update quiz data with validated questions
   const validatedQuiz = {
