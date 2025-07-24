@@ -163,12 +163,10 @@ const PDFUploadPage = () => {
                     tokensNeeded,
                     token
                 );
-                if (response?.status === "success") {
+                if (response?.status === "success" && response?.data){
                     return response.data;
                 } else {
-                    throw new Error(
-                        response.message || "Failed to generate summary"
-                    );
+                     throw new Error(response?.message || "Failed to generate summary");
                 }
             }
 
@@ -180,6 +178,9 @@ const PDFUploadPage = () => {
                         token
                     );
                 // ✅ No status/data wrapping — just return the array
+                if (!flashcards || (!Array.isArray(flashcards) && !flashcards.flashcards)){
+                    throw new Error ("invalid flashcard resoonse format");
+                }
                 return flashcards;
             }
 
@@ -189,11 +190,11 @@ const PDFUploadPage = () => {
                     tokensNeeded,
                     token
                 );
-                if (response?.status === "success") {
+                if (response?.status === "success" && response?.data?.quiz) {
                     return response.data.quiz;
                 } else {
                     throw new Error(
-                        response.message || "Failed to generate quiz"
+                        response?.message || "Failed to generate quiz"
                     );
                 }
             }
@@ -203,7 +204,7 @@ const PDFUploadPage = () => {
             throw new Error(error.message || `Failed to generate ${type}`);
         }
     };
-
+    console.log("Starting generation with options:", selectedOptions);
     const handleGenerate = async () => {
         if (!uploadedFile || selectedOptions.length === 0) return;
 
@@ -250,14 +251,20 @@ const PDFUploadPage = () => {
                         tokensNeeded,
                         "flashcards"
                     );
-                    const flashcardsArray =
-                        response.flashcards ||
-                        response.data?.flashcards ||
-                        response.data;
-
-                    if (!Array.isArray(flashcardsArray)) {
-                        throw new Error("Flashcards data is not an array");
-                    }
+                   
+                      let flashcardsArray;
+                        if (Array.isArray(response)) {
+                            flashcardsArray = response;
+                        } else if (response?.flashcards && Array.isArray(response.flashcards)) {
+                            flashcardsArray = response.flashcards;
+                        } else if (response?.data?.flashcards && Array.isArray(response.data.flashcards)) {
+                            flashcardsArray = response.data.flashcards;
+                        } else if (response?.data && Array.isArray(response.data)) {
+                            flashcardsArray = response.data;
+                        } else {
+                            throw new Error("Invalid flashcards response format");
+                        }
+                    
 
                     const formattedFlashcards = {
                         count: flashcardsArray.length,
@@ -270,10 +277,12 @@ const PDFUploadPage = () => {
                     generatedResults.flashcards = formattedFlashcards;
                     setFlashcardData(formattedFlashcards);
                 } catch (err) {
+                    console.error("Generation error:", err);
+                    console.error("Error stack:", err.stack);
                     generatedResults.flashcards = {
                         error: `Flashcards generation failed: ${err.message}`,
                     };
-                }
+                        }
             }
 
             // Handle Quiz Generation
@@ -704,7 +713,7 @@ const PDFUploadPage = () => {
                                 </div>
 
                                 <div className="grid gap-6">
-                                    {results.summary && (
+                                    {results.summary && !results.summary.error &&(
                                         <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 animate-fade-in">
                                             <div className="flex items-center mb-4">
                                                 <FileText className="w-6 h-6 text-blue-600 mr-3" />
@@ -733,7 +742,7 @@ const PDFUploadPage = () => {
                                     )}
 
                                     {/* Show flashcards when results are available */}
-                                    {selectedOptions.includes("flashcards") &&
+                                    {selectedOptions.includes("flashcards") && flashcardData && !flashcardData.error &&
                                         (console.log(
                                             "✅ flashcardData being passed:",
                                             flashcardData
@@ -741,9 +750,7 @@ const PDFUploadPage = () => {
                                         (
                                             <ModernFlashcards
                                                 flashcardData={flashcardData}
-                                                isLoading={
-                                                    isGeneratingFlashcards
-                                                }
+                                                isLoading={isGeneratingFlashcards}
                                             />
                                         ))}
 
