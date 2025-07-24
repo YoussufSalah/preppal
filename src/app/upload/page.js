@@ -23,7 +23,7 @@ import {
     useTokens,
 } from "../../utils/auth.js";
 import ModernFlashcards from "../components/flashcard";
-import QuizResultsSection from "../components/quiz";
+//import QuizResultsSection from "../components/quiz";
 import BetaNotice from "../components/betaNotice";
 import ReactMarkdown from "react-markdown";
 import { downloadMarkdownPDF } from "@/utils/downloadMarkdownPDF";
@@ -205,6 +205,7 @@ const PDFUploadPage = () => {
         }
     };
     console.log("Starting generation with options:", selectedOptions);
+
     const handleGenerate = async () => {
         if (!uploadedFile || selectedOptions.length === 0) return;
 
@@ -293,18 +294,17 @@ const PDFUploadPage = () => {
                         tokensNeeded,
                         "quiz"
                     );
-                    if (
-                        response &&
-                        response.questionsData &&
-                        Array.isArray(response.questionsData)
-                    ) {
-                        console.log("✅ Quiz data received:", response);
-                        generatedResults.quiz = response;
-                    } else {
-                        generatedResults.quiz = {
-                            error: "Quiz generation failed or returned invalid format.",
-                        };
-                    }
+                    
+                if ( response && response.data?.quiz) {
+                    console.log("✅ Quiz data recieve:", response);
+                    generatedResults.quiz = {
+                        questionsData: [response.data.quiz], 
+                    };
+                } else {
+                    generatedResults.quiz = { 
+                        error: "quiz generation failed or returned invalid format.",
+                    };
+                }
                 } catch (err) {
                     generatedResults.quiz = {
                         error: `Quiz generation failed: ${err.message}`,
