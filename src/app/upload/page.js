@@ -756,11 +756,13 @@ const PDFUploadPage = () => {
 
                                     {/* Quiz Section */}
 
-                                    <QuizResultsSection
+                                    {quiz?.questionsData?.length > 0 && (
+                                        <QuizResultsSection
                                         results={results}
                                         uploadedFile={uploadedFile}
                                         onStartQuiz={() => {}}
                                     />
+                                    )}
                                 </div>
 
                                 <div className="text-center pt-8">
