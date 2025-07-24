@@ -1,0 +1,101 @@
+**Pivot Idea: AI Resume Review & Optimization Tool**
+
+---
+
+## 🚀 Overview
+Build an AI-powered tool that helps job seekers fix their resumes so they get noticed by recruiters and beat the ATS (Applicant Tracking System) filters. It will:
+- Review uploaded resumes
+- Provide personalized, actionable feedback
+- Offer ATS-friendly templates
+- Optionally generate resumes from scratch
+
+---
+
+## 📈 Why This Pivot Works
+**Market Demand:** Millions of job seekers globally struggle with resume writing
+**Pain Point:** Most resumes are poorly written, not optimized for ATS, and cause people to miss interviews
+**AI Edge:** Smart, role-specific feedback and generation at scale
+**Monetization Potential:** High — people will pay to increase their chances of landing a job
+
+---
+
+## 📊 Target Users
+- Students & fresh grads
+- Mid-career professionals switching jobs
+- Freelancers building a more corporate presence
+- Immigrants or remote workers applying globally
+
+---
+
+## 🛠️ Core Features (MVP)
+
+### 1. Resume Review Engine
+- Upload a resume (PDF/DOCX)
+- AI analyzes and scores:
+  - Structure & readability
+  - Grammar & tone
+  - ATS compatibility
+  - Job-fit score (optional: upload job description too)
+
+### 2. Personalized Suggestions
+- Rewrite weak bullets with stronger action verbs
+- Keyword optimization for ATS
+- Formatting guidance (one-page limit, font size, spacing)
+
+### 3. Resume Templates
+- Clean, ATS-friendly templates
+- Role-specific formats (Tech, Marketing, Sales, Entry-Level, etc.)
+- Export as PDF or Word
+
+### 4. Optional Generator
+- Prompt-based resume builder ("What role are you applying for?")
+- Let AI generate resume based on experience input
+
+---
+
+## 💰 Monetization Options
+| Model | Details |
+|-------|---------|
+| Freemium | 1 resume review + 1 template for free |
+| Pro Plan | $7-10/mo: Unlimited reviews, templates, generation |
+| One-time Pay | $5 per AI resume fix |
+| Bundle | Resume + Cover Letter + LinkedIn rewrite: $12-15 |
+
+---
+
+## 🔄 Tech Stack Suggestions
+- React (frontend)
+- Supabase or Firebase (auth & DB)
+- Express/NestJS (backend)
+- OpenAI GPT-4 (resume feedback engine)
+- PDF.js or similar for parsing resumes
+
+---
+
+## 🔧 What You Should Learn First
+- ATS systems & how they parse resumes
+- Recruiter behavior: what they skim & ignore
+- Resume writing best practices
+- Clean, minimal template design principles
+- How to prompt GPT for resume feedback & rewriting
+
+---
+
+## 🎉 Viral Marketing Hooks
+- "Your resume is why you're not getting interviews. Let AI fix it."
+- "Built a resume in 60 seconds with AI and landed 3 interviews."
+- "Recruiters spend 6 seconds per resume. We show you what they see."
+
+---
+
+## ✅ Next Steps
+1. Finalize product name & domain
+2. Build basic upload + feedback interface
+3. Create 3 ATS-friendly templates
+4. Write the GPT prompt for feedback
+5. Launch beta & test with real job seekers
+
+---
+
+Let me know when you're ready to move on naming, prompts, or the UI/UX!
+
