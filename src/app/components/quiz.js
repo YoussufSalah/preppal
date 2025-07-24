@@ -189,13 +189,7 @@ const InteractiveQuiz = ({ quizData, onClose, fileName }) => {
                 <RotateCcw className="w-4 h-4 mr-2" />
                 Retake Quiz
               </button>
-              <button
-                onClick={downloadResults}
-                className="flex items-center justify-center px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl font-medium hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105"
-              >
-                <Download className="w-4 h-4 mr-2" />
-                Download Results
-              </button>
+             
               <button
                 onClick={onClose}
                 className="flex items-center justify-center px-6 py-3 bg-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-300 transition-all duration-300"
@@ -454,7 +448,7 @@ const QuizResultsSection = ({ results, uploadedFile, onStartQuiz, isLoading = fa
 // Add this check right after the "No quiz in results" check and before the structure validation:
 
   // Check for quiz generation error
-  if (results.quiz.error) {
+  if (results.quiz?.error) {
     return (
       <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg">
         <div className="flex items-center justify-center">
@@ -468,7 +462,7 @@ const QuizResultsSection = ({ results, uploadedFile, onStartQuiz, isLoading = fa
     );
   }
   // Check if quiz has the required structure - CRITICAL VALIDATION
-  if (!results.quiz.questionsData || !Array.isArray(results.quiz.questionsData) || results.quiz.questionsData.length === 0) {
+  if (!results.quiz?.questionsData || !Array.isArray(results.quiz.questionsData) || results.quiz.questionsData.length === 0) {
     return (
       <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg">
         <div className="flex items-center justify-center">
