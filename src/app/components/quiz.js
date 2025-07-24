@@ -448,33 +448,9 @@ const QuizResultsSection = ({ results, uploadedFile, onStartQuiz, isLoading = fa
 // Add this check right after the "No quiz in results" check and before the structure validation:
 
   // Check for quiz generation error
-  if (results.quiz?.error) {
-    return (
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg">
-        <div className="flex items-center justify-center">
-          <div className="text-center">
-            <XCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Quiz Generation Error</h3>
-            <p className="text-gray-600 mb-4">{results.quiz.error}</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  
   // Check if quiz has the required structure - CRITICAL VALIDATION
-  if (!results.quiz?.questionsData || !Array.isArray(results.quiz.questionsData) || results.quiz.questionsData.length === 0) {
-    return (
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg">
-        <div className="flex items-center justify-center">
-          <div className="text-center">
-            <XCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Invalid Quiz Data</h3>
-            <p className="text-gray-600">The quiz data is incomplete. Please try regenerating the quiz.</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  
 
   // Validate each question has required fields
   const validQuestions = results.quiz.questionsData.filter(q => 
@@ -485,20 +461,6 @@ const QuizResultsSection = ({ results, uploadedFile, onStartQuiz, isLoading = fa
     q.correct >= 0 && 
     q.correct <= 3
   );
-
-  if (validQuestions.length === 0) {
-    return (
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg">
-        <div className="flex items-center justify-center">
-          <div className="text-center">
-            <XCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Invalid Question Format</h3>
-            <p className="text-gray-600">The quiz questions are not properly formatted. Please regenerate the quiz.</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   // Update quiz data with validated questions
   const validatedQuiz = {
