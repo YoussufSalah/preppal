@@ -288,29 +288,30 @@ const PDFUploadPage = () => {
 
             // Handle Quiz Generation
             if (selectedOptions.includes("quiz")) {
-                try {
-                    const response = await requestAI(
-                        parsedText,
-                        tokensNeeded,
-                        "quiz"
-                    );
-                    
-                if ( response && response.data?.quiz) {
-                    console.log("✅ Quiz data recieve:", response);
-                    generatedResults.quiz = {
-                        questionsData: [response.data.quiz], 
-                    };
-                } else {
-                    generatedResults.quiz = { 
-                        error: "quiz generation failed or returned invalid format.",
-                    };
-                }
-                } catch (err) {
-                    generatedResults.quiz = {
-                        error: `Quiz generation failed: ${err.message}`,
-                    };
-                }
-            }
+  try {
+    const response = await requestAI(
+      parsedText,
+      tokensNeeded,
+      "quiz"
+    );
+
+    if (response && response.data?.quiz) {
+      console.log("✅ Quiz data received:", response);
+      generatedResults.quiz = {
+        questionsData: [response.data.quiz],  // ✅ Fix is here
+      };
+    } else {
+      generatedResults.quiz = {
+        error: "Quiz generation failed or returned invalid format.",
+      };
+    }
+  } catch (err) {
+    generatedResults.quiz = {
+      error: `Quiz generation failed: ${err.message}`,
+    };
+  }
+}
+
 
             // Always set results, even if some operations failed
             setResults(generatedResults);
@@ -758,11 +759,12 @@ const PDFUploadPage = () => {
 
                                     {quiz?.questionsData?.length > 0 && (
                                         <QuizResultsSection
-                                        results={results}
-                                        uploadedFile={uploadedFile}
-                                        onStartQuiz={() => {}}
-                                    />
-                                    )}
+                                            results={results}
+                                            uploadedFile={uploadedFile}
+                                            onStartQuiz={() => {}}
+                                        />
+                                        )}
+
                                 </div>
 
                                 <div className="text-center pt-8">
