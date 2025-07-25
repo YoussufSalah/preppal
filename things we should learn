@@ -1,0 +1,43 @@
+# 📚 What You Should Learn Before Building the Resume AI Tool
+
+## 1. ATS (Applicant Tracking System) Mechanics
+- Understand how ATS systems parse resumes
+- Learn what causes resumes to get rejected (e.g. columns, tables, images)
+- Explore how keyword matching works for job descriptions
+
+## 2. How Recruiters Think
+- What recruiters look for in the first 6–10 seconds
+- Common mistakes that make resumes instantly skippable
+- Why bullet points > paragraphs
+- The power of quantifiable results (e.g. “Increased engagement by 40%”)
+
+## 3. Resume Writing Best Practices
+- Structure: header, summary, experience, skills, education
+- Use of active verbs (e.g. launched, built, led)
+- Tailoring for each job description
+- Ideal resume length (1 page for most, 2 max)
+
+## 4. ATS-Friendly Design Principles
+- Avoid fancy formatting, images, and icons
+- Stick to standard fonts (Arial, Calibri, Helvetica)
+- Keep sections clearly labeled and linearly formatted
+
+## 5. GPT Prompt Engineering for Resumes
+- How to prompt AI to act like a recruiter
+- Asking for role-specific feedback
+- Scoring resumes against a job description
+- Generating improved versions of bullet points or summaries
+
+## 6. Templates That Actually Work
+- Study what a clean, modern, ATS-friendly resume looks like
+- Explore top tools like:
+  - ResumeGenius
+  - CultivatedCulture
+  - Enhancv
+  - NovoResume
+
+## 7. Empathy with the Job Seeker
+- Understand the emotional journey: rejection, frustration, silence
+- Learn what motivates job seekers to try new tools
+- Read real stories on Reddit (r/resumes, r/recruitinghell)
+
