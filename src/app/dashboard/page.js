@@ -50,7 +50,7 @@ useEffect(() => {
 
       if(
         typeof stats.subscription === "object" && 
-        stats.subscription.name.toLowerCase() === "pro" &&
+        stats.subscription.name === "pro" &&
         stats.subscription.isActive
       ) {
         setIsProMember(true);
