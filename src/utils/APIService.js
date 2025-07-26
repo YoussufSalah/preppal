@@ -1,3 +1,5 @@
+
+
 if (!process.env.NEXT_PUBLIC_API_BASE_URL) {
     throw new Error("Missing NEXT_PUBLIC_API_BASE_URL in env!");
 }
@@ -11,6 +13,66 @@ class APIService {
             this.baseURL.includes("localhost") ||
             this.baseURL.includes("127.0.0.1");
         this.useSupabaseAuth = false; // Will be set after checking available endpoints
+    }
+
+    async checkAvailableEndpoints() {
+        console.log("Checking available endpoints on the server...");
+
+        const testEndpoints = [
+            "/api/auth/login",
+            "/api/auth/register",
+            "/api/user/me",
+            "/api/upload/pdf",
+            "/api/summarize",
+            "/api/flashcards",
+            "/health",
+            "/status",
+            "/",
+        ];
+
+        const results = {};
+
+        for (const endpoint of testEndpoints) {
+            try {
+                const response = await fetch(`${this.baseURL}${endpoint}`, {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json" },
+                });
+                results[endpoint] = {
+                    status: response.status,
+                    statusText: response.statusText,
+                    available: response.status !== 404,
+                };
+                console.log(
+                    `${endpoint}: ${response.status} ${response.statusText}`
+                );
+            } catch (error) {
+                results[endpoint] = {
+                    error: error.message,
+                    available: false,
+                };
+                console.log(`${endpoint}: Error - ${error.message}`);
+            }
+        }
+
+        // Check if any auth endpoints are available
+        const authEndpointsAvailable =
+            results["/api/auth/login"]?.available ||
+            results["/api/auth/register"]?.available;
+
+        if (!authEndpointsAvailable) {
+            console.log(
+                "No custom auth endpoints found. Will use Supabase authentication."
+            );
+            this.useSupabaseAuth = true;
+        } else {
+            console.log(
+                "Custom auth endpoints found. Using custom authentication."
+            );
+            this.useSupabaseAuth = false;
+        }
+
+        return results;
     }
 
     async makeRequest(endpoint, options = {}) {
@@ -193,35 +255,59 @@ class APIService {
     }
 
     // Summary Methods
-    async generateSummaryFromParsedText(parsedText, tokensNeeded, token) {
-        return this.makeRequest(`/summarize/pdf`, {
+    async generatePDFSummary(uploadId, token) {
+        return this.makeRequest(`/summarize/pdf/${uploadId}`, {
             method: "GET",
             headers: {
                 Authorization: `Bearer ${token}`,
             },
-            body: { parsedText, tokensNeeded },
+        });
+    }
+
+    async getAllSummaries(token) {
+        return this.makeRequest("/summarize/", {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
         });
     }
 
     // Flashcard Methods
-    async generateFlashcardsFromParsedText(parsedText, tokensNeeded, token) {
-        return this.makeRequest(`/flashcards/pdf`, {
+    async generatePDFFlashcards(uploadId, token) {
+        return this.makeRequest(`/flashcards/pdf/${uploadId}`, {
             method: "GET",
             headers: {
                 Authorization: `Bearer ${token}`,
             },
-            body: { parsedText, tokensNeeded },
+        });
+    }
+
+    async getAllFlashcards(token) {
+        return this.makeRequest("/flashcards/", {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
         });
     }
 
     // Quiz Methods
-    async generateQuizFromParsedText(parsedText, tokensNeeded, token) {
-        return this.makeRequest(`/quizzes/pdf`, {
+    async generatePDFQuiz(uploadId, token) {
+        return this.makeRequest(`/quizzes/pdf/${uploadId}`, {
             method: "GET",
             headers: {
                 Authorization: `Bearer ${token}`,
             },
-            body: { parsedText, tokensNeeded },
+        });
+    }
+
+    async getAllQuizzes(token) {
+        return this.makeRequest("/quizzes/", {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
         });
     }
 
@@ -252,19 +338,18 @@ class APIService {
             },
         });
     }
-
-    async updateUserStreak({ current_streak, best_streak }, token) {
-        return this.makeRequest("/users/me", {
-            method: "PATCH",
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-                current_streak,
-                best_streak,
-            }),
-        });
-    }
+async updateUserStreak({ current_streak, best_streak }, token) {
+    return this.makeRequest("/users/me", {
+        method: "PATCH",
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+            current_streak,
+            best_streak,
+        }),
+    });
+}
 
     // Utility Methods
     getToken() {

@@ -23,7 +23,7 @@ import {
     useTokens,
 } from "../../utils/auth.js";
 import ModernFlashcards from "../components/flashcard";
-//import QuizResultsSection from "../components/quiz";
+import QuizResultsSection from "../components/quiz";
 import BetaNotice from "../components/betaNotice";
 import ReactMarkdown from "react-markdown";
 import { downloadMarkdownPDF } from "@/utils/downloadMarkdownPDF";
@@ -143,14 +143,13 @@ const PDFUploadPage = () => {
 
         const response = await apiService.uploadPDF(file, token);
         if (response.status === "success") {
-            const { parsedText, tokensNeeded } = response.data;
-            return { parsedText, tokensNeeded };
+            return response.data.uploadLog.id;
         } else {
             throw new Error(response.message || "Failed to upload PDF");
         }
     };
 
-    const requestAI = async (parsedText, tokensNeeded, type) => {
+    const requestAI = async (uploadId, type) => {
         const token = getToken();
         if (!token) {
             throw new Error("No authentication token found");
@@ -158,43 +157,38 @@ const PDFUploadPage = () => {
 
         try {
             if (type === "summary") {
-                const response = await apiService.generateSummaryFromParsedText(
-                    parsedText,
-                    tokensNeeded,
+                const response = await apiService.generatePDFSummary(
+                    uploadId,
                     token
                 );
-                if (response?.status === "success" && response?.data){
+                if (response?.status === "success") {
                     return response.data;
                 } else {
-                     throw new Error(response?.message || "Failed to generate summary");
+                    throw new Error(
+                        response.message || "Failed to generate summary"
+                    );
                 }
             }
 
             if (type === "flashcards") {
-                const flashcards =
-                    await apiService.generateFlashcardsFromParsedText(
-                        parsedText,
-                        tokensNeeded,
-                        token
-                    );
+                const flashcards = await apiService.generatePDFFlashcards(
+                    uploadId,
+                    token
+                );
                 // ✅ No status/data wrapping — just return the array
-                if (!flashcards || (!Array.isArray(flashcards) && !flashcards.flashcards)){
-                    throw new Error ("invalid flashcard resoonse format");
-                }
                 return flashcards;
             }
 
             if (type === "quiz") {
-                const response = await apiService.generateQuizFromParsedText(
-                    parsedText,
-                    tokensNeeded,
+                const response = await apiService.generatePDFQuiz(
+                    uploadId,
                     token
                 );
-                if (response?.status === "success" && response?.data?.quiz) {
+                if (response?.status === "success") {
                     return response.data.quiz;
                 } else {
                     throw new Error(
-                        response?.message || "Failed to generate quiz"
+                        response.message || "Failed to generate quiz"
                     );
                 }
             }
@@ -204,7 +198,6 @@ const PDFUploadPage = () => {
             throw new Error(error.message || `Failed to generate ${type}`);
         }
     };
-    console.log("Starting generation with options:", selectedOptions);
 
     const handleGenerate = async () => {
         if (!uploadedFile || selectedOptions.length === 0) return;
@@ -215,19 +208,13 @@ const PDFUploadPage = () => {
         setError(null);
 
         try {
-            const { parsedText, tokensNeeded } = await uploadPdfToLevi(
-                uploadedFile
-            );
+            const uploadId = await uploadPdfToLevi(uploadedFile);
             const generatedResults = {};
 
             // Handle Summary Generation
             if (selectedOptions.includes("summary")) {
                 try {
-                    const response = await requestAI(
-                        parsedText,
-                        tokensNeeded,
-                        "summary"
-                    );
+                    const response = await requestAI(uploadId, "summary");
                     if (response && response.summary) {
                         generatedResults.summary = {
                             content: response.summary,
@@ -247,25 +234,15 @@ const PDFUploadPage = () => {
             // Handle Flashcards Generation
             if (selectedOptions.includes("flashcards")) {
                 try {
-                    const response = await requestAI(
-                        parsedText,
-                        tokensNeeded,
-                        "flashcards"
-                    );
-                   
-                      let flashcardsArray;
-                        if (Array.isArray(response)) {
-                            flashcardsArray = response;
-                        } else if (response?.flashcards && Array.isArray(response.flashcards)) {
-                            flashcardsArray = response.flashcards;
-                        } else if (response?.data?.flashcards && Array.isArray(response.data.flashcards)) {
-                            flashcardsArray = response.data.flashcards;
-                        } else if (response?.data && Array.isArray(response.data)) {
-                            flashcardsArray = response.data;
-                        } else {
-                            throw new Error("Invalid flashcards response format");
-                        }
-                    
+                    const response = await requestAI(uploadId, "flashcards");
+                    const flashcardsArray =
+                        response.flashcards ||
+                        response.data?.flashcards ||
+                        response.data;
+
+                    if (!Array.isArray(flashcardsArray)) {
+                        throw new Error("Flashcards data is not an array");
+                    }
 
                     const formattedFlashcards = {
                         count: flashcardsArray.length,
@@ -278,40 +255,34 @@ const PDFUploadPage = () => {
                     generatedResults.flashcards = formattedFlashcards;
                     setFlashcardData(formattedFlashcards);
                 } catch (err) {
-                    console.error("Generation error:", err);
-                    console.error("Error stack:", err.stack);
                     generatedResults.flashcards = {
                         error: `Flashcards generation failed: ${err.message}`,
                     };
-                        }
+                }
             }
 
             // Handle Quiz Generation
             if (selectedOptions.includes("quiz")) {
-  try {
-    const response = await requestAI(
-      parsedText,
-      tokensNeeded,
-      "quiz"
-    );
-
-    if (response && response.data?.quiz) {
-      console.log("✅ Quiz data received:", response);
-      generatedResults.quiz = {
-        questionsData: [response.data.quiz],  // ✅ Fix is here
-      };
-    } else {
-      generatedResults.quiz = {
-        error: "Quiz generation failed or returned invalid format.",
-      };
-    }
-  } catch (err) {
-    generatedResults.quiz = {
-      error: `Quiz generation failed: ${err.message}`,
-    };
-  }
-}
-
+                try {
+                    const response = await requestAI(uploadId, "quiz");
+                    if (
+                        response &&
+                        response.questionsData &&
+                        Array.isArray(response.questionsData)
+                    ) {
+                        console.log("✅ Quiz data received:", response);
+                        generatedResults.quiz = response;
+                    } else {
+                        generatedResults.quiz = {
+                            error: "Quiz generation failed or returned invalid format.",
+                        };
+                    }
+                } catch (err) {
+                    generatedResults.quiz = {
+                        error: `Quiz generation failed: ${err.message}`,
+                    };
+                }
+            }
 
             // Always set results, even if some operations failed
             setResults(generatedResults);
@@ -714,7 +685,7 @@ const PDFUploadPage = () => {
                                 </div>
 
                                 <div className="grid gap-6">
-                                    {results.summary && !results.summary.error &&(
+                                    {results.summary && (
                                         <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 animate-fade-in">
                                             <div className="flex items-center mb-4">
                                                 <FileText className="w-6 h-6 text-blue-600 mr-3" />
@@ -728,14 +699,9 @@ const PDFUploadPage = () => {
                                                 </ReactMarkdown>
                                             </div>
 
-                                            <button
-                                                onClick={() =>
-                                                    downloadMarkdownPDF(
-                                                        results.summary.content,
-                                                        "PrepPal-Summary.pdf"
-                                                    )
-                                                }
-                                                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-all"
+                                           <button
+                                            onClick={() => downloadMarkdownPDF(results.summary.content, "PrepPal-Summary.pdf")}
+                                            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-all"
                                             >
                                                 Download as PDF.
                                             </button>
@@ -743,7 +709,7 @@ const PDFUploadPage = () => {
                                     )}
 
                                     {/* Show flashcards when results are available */}
-                                    {selectedOptions.includes("flashcards") && flashcardData && !flashcardData.error &&
+                                    {selectedOptions.includes("flashcards") &&
                                         (console.log(
                                             "✅ flashcardData being passed:",
                                             flashcardData
@@ -751,20 +717,19 @@ const PDFUploadPage = () => {
                                         (
                                             <ModernFlashcards
                                                 flashcardData={flashcardData}
-                                                isLoading={isGeneratingFlashcards}
+                                                isLoading={
+                                                    isGeneratingFlashcards
+                                                }
                                             />
                                         ))}
 
                                     {/* Quiz Section */}
 
-                                    {quiz?.questionsData?.length > 0 && (
-                                        <QuizResultsSection
-                                            results={results}
-                                            uploadedFile={uploadedFile}
-                                            onStartQuiz={() => {}}
-                                        />
-                                        )}
-
+                                    <QuizResultsSection
+                                        results={results}
+                                        uploadedFile={uploadedFile}
+                                        onStartQuiz={() => {}}
+                                    />
                                 </div>
 
                                 <div className="text-center pt-8">
