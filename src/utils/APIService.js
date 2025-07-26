@@ -1,5 +1,3 @@
-
-
 if (!process.env.NEXT_PUBLIC_API_BASE_URL) {
     throw new Error("Missing NEXT_PUBLIC_API_BASE_URL in env!");
 }
@@ -255,59 +253,35 @@ class APIService {
     }
 
     // Summary Methods
-    async generatePDFSummary(uploadId, token) {
-        return this.makeRequest(`/summarize/pdf/${uploadId}`, {
+    async generatePDFSummary(token, payload) {
+        return this.makeRequest(`/summarize/pdf/`, {
             method: "GET",
             headers: {
                 Authorization: `Bearer ${token}`,
             },
-        });
-    }
-
-    async getAllSummaries(token) {
-        return this.makeRequest("/summarize/", {
-            method: "GET",
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
+            body: payload,
         });
     }
 
     // Flashcard Methods
-    async generatePDFFlashcards(uploadId, token) {
-        return this.makeRequest(`/flashcards/pdf/${uploadId}`, {
+    async generatePDFFlashcards(token, payload) {
+        return this.makeRequest(`/flashcards/pdf/`, {
             method: "GET",
             headers: {
                 Authorization: `Bearer ${token}`,
             },
-        });
-    }
-
-    async getAllFlashcards(token) {
-        return this.makeRequest("/flashcards/", {
-            method: "GET",
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
+            body: payload,
         });
     }
 
     // Quiz Methods
-    async generatePDFQuiz(uploadId, token) {
+    async generatePDFQuiz(token, payload) {
         return this.makeRequest(`/quizzes/pdf/${uploadId}`, {
             method: "GET",
             headers: {
                 Authorization: `Bearer ${token}`,
             },
-        });
-    }
-
-    async getAllQuizzes(token) {
-        return this.makeRequest("/quizzes/", {
-            method: "GET",
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
+            body: payload,
         });
     }
 
@@ -338,18 +312,19 @@ class APIService {
             },
         });
     }
-async updateUserStreak({ current_streak, best_streak }, token) {
-    return this.makeRequest("/users/me", {
-        method: "PATCH",
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-            current_streak,
-            best_streak,
-        }),
-    });
-}
+
+    async updateUserStreak({ current_streak, best_streak }, token) {
+        return this.makeRequest("/users/me", {
+            method: "PATCH",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                current_streak,
+                best_streak,
+            }),
+        });
+    }
 
     // Utility Methods
     getToken() {

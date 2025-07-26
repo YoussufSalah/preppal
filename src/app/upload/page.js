@@ -143,13 +143,16 @@ const PDFUploadPage = () => {
 
         const response = await apiService.uploadPDF(file, token);
         if (response.status === "success") {
-            return response.data.uploadLog.id;
+            return {
+                parsedText: response.data.parsedText,
+                tokensNeeded: response.data.tokensNeeded,
+            };
         } else {
             throw new Error(response.message || "Failed to upload PDF");
         }
     };
 
-    const requestAI = async (uploadId, type) => {
+    const requestAI = async (payload, type) => {
         const token = getToken();
         if (!token) {
             throw new Error("No authentication token found");
@@ -158,11 +161,11 @@ const PDFUploadPage = () => {
         try {
             if (type === "summary") {
                 const response = await apiService.generatePDFSummary(
-                    uploadId,
-                    token
+                    token,
+                    payload
                 );
                 if (response?.status === "success") {
-                    return response.data;
+                    return response.data.summary;
                 } else {
                     throw new Error(
                         response.message || "Failed to generate summary"
@@ -172,17 +175,22 @@ const PDFUploadPage = () => {
 
             if (type === "flashcards") {
                 const flashcards = await apiService.generatePDFFlashcards(
-                    uploadId,
-                    token
+                    token,
+                    payload
                 );
-                // ✅ No status/data wrapping — just return the array
-                return flashcards;
+                if (response?.status === "success") {
+                    return response.data.flashcards;
+                } else {
+                    throw new Error(
+                        response.message || "Failed to generate flashcards"
+                    );
+                }
             }
 
             if (type === "quiz") {
                 const response = await apiService.generatePDFQuiz(
-                    uploadId,
-                    token
+                    token,
+                    payload
                 );
                 if (response?.status === "success") {
                     return response.data.quiz;
@@ -208,16 +216,16 @@ const PDFUploadPage = () => {
         setError(null);
 
         try {
-            const uploadId = await uploadPdfToLevi(uploadedFile);
+            const payload = await uploadPdfToLevi(uploadedFile);
             const generatedResults = {};
 
             // Handle Summary Generation
             if (selectedOptions.includes("summary")) {
                 try {
-                    const response = await requestAI(uploadId, "summary");
-                    if (response && response.summary) {
+                    const response = await requestAI(payload, "summary");
+                    if (response) {
                         generatedResults.summary = {
-                            content: response.summary,
+                            content: response,
                         };
                     } else {
                         generatedResults.summary = {
@@ -234,19 +242,15 @@ const PDFUploadPage = () => {
             // Handle Flashcards Generation
             if (selectedOptions.includes("flashcards")) {
                 try {
-                    const response = await requestAI(uploadId, "flashcards");
-                    const flashcardsArray =
-                        response.flashcards ||
-                        response.data?.flashcards ||
-                        response.data;
+                    const response = await requestAI(payload, "flashcards");
 
-                    if (!Array.isArray(flashcardsArray)) {
+                    if (!Array.isArray(response)) {
                         throw new Error("Flashcards data is not an array");
                     }
 
                     const formattedFlashcards = {
-                        count: flashcardsArray.length,
-                        cards: flashcardsArray.map((card) => ({
+                        count: response.length,
+                        cards: response.map((card) => ({
                             front: card.front,
                             back: card.back,
                         })),
@@ -264,7 +268,7 @@ const PDFUploadPage = () => {
             // Handle Quiz Generation
             if (selectedOptions.includes("quiz")) {
                 try {
-                    const response = await requestAI(uploadId, "quiz");
+                    const response = await requestAI(payload, "quiz");
                     if (
                         response &&
                         response.questionsData &&
@@ -699,9 +703,14 @@ const PDFUploadPage = () => {
                                                 </ReactMarkdown>
                                             </div>
 
-                                           <button
-                                            onClick={() => downloadMarkdownPDF(results.summary.content, "PrepPal-Summary.pdf")}
-                                            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-all"
+                                            <button
+                                                onClick={() =>
+                                                    downloadMarkdownPDF(
+                                                        results.summary.content,
+                                                        "PrepPal-Summary.pdf"
+                                                    )
+                                                }
+                                                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-all"
                                             >
                                                 Download as PDF.
                                             </button>
